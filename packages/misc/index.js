@@ -10,7 +10,10 @@ class MiscFeature {
 		}).forEach((file) => {
 			const ext = path.extname(file.name);
 			if (!file.isFile() || (ext != '.js' && ext != '.ts')) return;
-			const cmds = require(path.join(__dirname, 'commands', file.name));
+			let cmds = require(path.join(__dirname, 'commands', file.name));
+			if ('default' in cmds) {
+				cmds = cmds.default;
+			}
 			CommandManager.default.addCommands(cmds);
 		});
 	}
