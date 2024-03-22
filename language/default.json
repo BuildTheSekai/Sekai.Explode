@@ -117,6 +117,11 @@
 		}
 	},
 	"commands": {
+		"cal": {
+			"name": "cal",
+			"description": "カレンダーを表示します",
+			"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+		},
 		"check": {
 			"name": "check",
 			"description": "Ping Checker",
