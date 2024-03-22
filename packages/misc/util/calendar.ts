@@ -26,7 +26,13 @@ export class Day {
 		this.date = dateObj.getDate();
 		this.day = dateObj.getDay() as DayOfWeek;
 	}
+
+	add(days: number) {
+		return new Day(this.year, this.month, this.date + days);
+	}
 }
+
+export type Week = { [K in DayOfWeek]: Day } & Array<Day>;
 
 export class MonthCalendar {
 	public readonly month: number;
@@ -53,10 +59,28 @@ export class MonthCalendar {
 		this.size = new Date(year, monthIndex + 1, 0).getDate();
 	}
 
-	*days(): Iterable<Day> {
-		const size = this.size;
-		for (let date = 1; date <= size; date++) {
-			yield new Day(this.year, this.month, date);
+	firstDay() {
+		return new Day(this.year, this.month, 1);
+	}
+
+	includes(day: Day) {
+		if (day.year == this.year && day.month == this.month) {
+			return true;
 		}
+	}
+
+	*weeks(): Iterable<Week> {
+		const monthFirst = this.firstDay();
+		let weekFirst = monthFirst.add(-monthFirst.day);
+		do {
+			const week = [weekFirst];
+			let day = weekFirst;
+			for (let i = 1; i < 7; i++) {
+				day = day.add(1);
+				week[i] = day;
+			}
+			yield week as Week;
+			weekFirst = weekFirst.add(7);
+		} while (this.includes(weekFirst));
 	}
 }
