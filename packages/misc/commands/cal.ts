@@ -1,5 +1,5 @@
 import { SimpleSlashCommandBuilder } from '../../../common/SimpleCommand';
-import { Day, MonthCalendar } from '../util/calendar';
+import { DayOfWeek, MonthCalendar } from '../util/calendar';
 
 export default SimpleSlashCommandBuilder.create(
 	'cal',
@@ -7,28 +7,27 @@ export default SimpleSlashCommandBuilder.create(
 ).build(async (interaction) => {
 	const calendar = new MonthCalendar();
 	const dates = [];
-	const size = calendar.size;
-	for (let i = 1; i <= size; i++) {
-		dates.push(`${dayToString(calendar.dayOf(i))} ${String(i).padStart(2)}`);
+	for (const day of calendar.days()) {
+		dates.push(`${dayToString(day.day)} ${String(day.date).padStart(2)}`);
 	}
 	await interaction.reply('```' + dates.join('\n') + '```');
 });
 
-function dayToString(day: Day) {
+function dayToString(day: DayOfWeek) {
 	switch (day) {
-		case Day.Sunday:
+		case DayOfWeek.Sunday:
 			return 'Su';
-		case Day.Monday:
+		case DayOfWeek.Monday:
 			return 'Mo';
-		case Day.Tuesday:
+		case DayOfWeek.Tuesday:
 			return 'Tu';
-		case Day.Wednesday:
+		case DayOfWeek.Wednesday:
 			return 'We';
-		case Day.Thursday:
+		case DayOfWeek.Thursday:
 			return 'Th';
-		case Day.Friday:
+		case DayOfWeek.Friday:
 			return 'Fr';
-		case Day.Saturday:
+		case DayOfWeek.Saturday:
 			return 'Sa';
 	}
 }
