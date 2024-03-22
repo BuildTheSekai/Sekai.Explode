@@ -1,4 +1,4 @@
-export const Day = Object.freeze({
+export const DayOfWeek = Object.freeze({
 	Sunday: 0,
 	Monday: 1,
 	Tuesday: 2,
@@ -8,7 +8,25 @@ export const Day = Object.freeze({
 	Saturday: 6,
 });
 
-export type Day = (typeof Day)[keyof typeof Day];
+export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek];
+
+export class Day {
+	public readonly year: number;
+
+	public readonly month: number;
+
+	public readonly date: number;
+
+	public readonly day: DayOfWeek;
+
+	constructor(year: number, monthIndex: number, date: number) {
+		const dateObj = new Date(year, monthIndex, date);
+		this.year = dateObj.getFullYear();
+		this.month = dateObj.getMonth();
+		this.date = dateObj.getDate();
+		this.day = dateObj.getDay() as DayOfWeek;
+	}
+}
 
 export class MonthCalendar {
 	public readonly month: number;
@@ -16,9 +34,6 @@ export class MonthCalendar {
 	public readonly year: number;
 
 	public readonly size: number;
-
-	/** 0日 (1日の前日) の曜日 */
-	private readonly baseDay: Day;
 
 	/**
 	 * 月のカレンダーを作成する。
@@ -36,10 +51,12 @@ export class MonthCalendar {
 		this.month = monthIndex;
 		this.year = year;
 		this.size = new Date(year, monthIndex + 1, 0).getDate();
-		this.baseDay = new Date(year, monthIndex, 0).getDay() as Day;
 	}
 
-	dayOf(date: number): Day {
-		return ((this.baseDay + date) % 7) as Day;
+	*days(): Iterable<Day> {
+		const size = this.size;
+		for (let date = 1; date <= size; date++) {
+			yield new Day(this.year, this.month, date);
+		}
 	}
 }
