@@ -1,9 +1,10 @@
 import { SimpleSlashCommandBuilder } from '../../../common/SimpleCommand';
+import { LANG } from '../../../util/languages';
 import { MonthCalendar } from '../util/calendar';
 
 export default SimpleSlashCommandBuilder.create(
-	'cal',
-	'カレンダーを表示します',
+	LANG.commands.cal.name,
+	LANG.commands.cal.description,
 ).build(async (interaction) => {
 	const calendar = new MonthCalendar();
 	const days = Array.from(calendar.weeks())
@@ -15,5 +16,7 @@ export default SimpleSlashCommandBuilder.create(
 				.join(' '),
 		)
 		.join('\n');
-	await interaction.reply('```Su Mo Tu We Th Fr Sa\n' + days + '```');
+	await interaction.reply(
+		'```' + LANG.commands.cal.dayLabels.join(' ') + '\n' + days + '```',
+	);
 });
