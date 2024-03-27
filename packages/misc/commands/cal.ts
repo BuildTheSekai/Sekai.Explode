@@ -28,7 +28,7 @@ export default SimpleSlashCommandBuilder.create(
 		}),
 		...Array.from(calendar.weeks()).map((week) =>
 			week.map((day) => {
-				const text = new InlineText(day.date.toString().padStart(2));
+				const text = new InlineText(day.date.toString());
 				text.color = dayColor(day.day);
 				return text;
 			}),
@@ -36,9 +36,8 @@ export default SimpleSlashCommandBuilder.create(
 	];
 	const canvas = createCanvas(800, 400);
 	const ctx = canvas.getContext('2d');
-	ctx.fillStyle = 'white';
-	ctx.fillRect(0, 0, 800, 400);
-	const canvasTable = new CanvasTable(table, new BoundingBox(50, 50, 750, 350));
+	new BoundingBox(0, 0, 800, 400).fill(ctx, 'white');
+	const canvasTable = new CanvasTable(table, new BoundingBox(50, 50, 700, 300));
 	canvasTable.color = 'black';
 	canvasTable.renderTo(ctx);
 	await interaction.reply({

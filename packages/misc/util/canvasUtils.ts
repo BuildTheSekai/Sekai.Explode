@@ -1,5 +1,4 @@
-import { CanvasRenderingContext2D, CanvasTextBaseline } from 'canvas';
-import { formatTable } from '../../../util/strings';
+import { CanvasRenderingContext2D } from 'canvas';
 
 function requireNonnegative(x: number, name: string): number {
 	if (x < 0) {
@@ -22,6 +21,20 @@ export class BoundingBox {
 		this.y = requireNonnegative(y, 'y');
 		this.width = requireNonnegative(width, 'width');
 		this.height = requireNonnegative(height, 'height');
+	}
+
+	stroke(ctx: CanvasRenderingContext2D, color: string) {
+		ctx.save();
+		ctx.strokeStyle = color;
+		ctx.strokeRect(this.x, this.y, this.width, this.height);
+		ctx.restore();
+	}
+
+	fill(ctx: CanvasRenderingContext2D, color: string) {
+		ctx.save();
+		ctx.fillStyle = color;
+		ctx.fillRect(this.x, this.y, this.width, this.height);
+		ctx.restore();
 	}
 }
 
@@ -55,6 +68,10 @@ export class CanvasTextBox {
 
 	public boundingBox: BoundingBox;
 
+	public align: 'center' = 'center';
+
+	public verticalAlign: 'middle' = 'middle';
+
 	constructor(text: InlineText, boundingBox: BoundingBox) {
 		this.text = text;
 		this.boundingBox = boundingBox;
@@ -63,8 +80,26 @@ export class CanvasTextBox {
 	renderTo(ctx: CanvasRenderingContext2D) {
 		ctx.save();
 		ctx.textBaseline = 'top';
-		this.text.renderTo(ctx, this.boundingBox.x, this.boundingBox.y);
+		ctx.textAlign = this.align;
+		ctx.textBaseline = this.verticalAlign;
+		this.text.renderTo(ctx, this.getX(), this.getY());
 		ctx.restore();
+	}
+
+	private getX() {
+		const boundingBox = this.boundingBox;
+		switch (this.align) {
+			case 'center':
+				return boundingBox.x + boundingBox.width / 2;
+		}
+	}
+
+	private getY() {
+		const boundingBox = this.boundingBox;
+		switch (this.verticalAlign) {
+			case 'middle':
+				return boundingBox.y + boundingBox.height / 2;
+		}
 	}
 }
 
@@ -88,8 +123,8 @@ export class CanvasTable {
 						new BoundingBox(
 							boundingBox.x + cellWidth * j,
 							boundingBox.y + cellHeight * i,
-							boundingBox.width,
-							boundingBox.height,
+							cellWidth,
+							cellHeight,
 						),
 					),
 			),
