@@ -120,7 +120,22 @@
 		"cal": {
 			"name": "cal",
 			"description": "カレンダーを表示します",
-			"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+			"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+			"monthNames": [
+				"1月",
+				"2月",
+				"3月",
+				"4月",
+				"5月",
+				"6月",
+				"7月",
+				"8月",
+				"9月",
+				"10月",
+				"11月",
+				"12月"
+			],
+			"monthYear": "${year}年${month}"
 		},
 		"check": {
 			"name": "check",
