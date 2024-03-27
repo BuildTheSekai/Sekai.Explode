@@ -6,6 +6,7 @@ import {
 	BoundingBox,
 	CanvasTable,
 	CanvasTextBox,
+	FONT_FAMILY,
 	InlineText,
 } from '../util/canvasUtils';
 
@@ -40,7 +41,7 @@ export default SimpleSlashCommandBuilder.create(
 					text.color = 'gray';
 				}
 				if (day.is(today)) {
-					text.font = 'bold 24px serif';
+					text.font = `bold 24px ${FONT_FAMILY}`;
 				}
 				return text;
 			}),
@@ -55,7 +56,7 @@ export default SimpleSlashCommandBuilder.create(
 	});
 	const titleStyle = new InlineText(title);
 	titleStyle.color = 'black';
-	titleStyle.font = '48px serif';
+	titleStyle.font = `48px ${FONT_FAMILY}`;
 	new CanvasTextBox(titleStyle, new BoundingBox(50, 0, 700, 100)).renderTo(ctx);
 	new CanvasTable(table, new BoundingBox(50, 100, 700, 300)).renderTo(ctx);
 	await interaction.reply({
