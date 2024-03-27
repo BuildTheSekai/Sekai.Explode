@@ -13,7 +13,6 @@ export default SimpleSlashCommandBuilder.create(
 		week.map((day) => day.date.toString().padStart(2)),
 	);
 	const table = [LANG.commands.cal.dayLabels, ...days];
-	console.log(table);
 	const canvas = createCanvas(800, 400);
 	const ctx = canvas.getContext('2d');
 	ctx.fillStyle = 'white';
