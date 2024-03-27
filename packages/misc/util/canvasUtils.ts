@@ -1,4 +1,4 @@
-import { CanvasRenderingContext2D } from 'canvas';
+import { CanvasRenderingContext2D, CanvasTextBaseline } from 'canvas';
 import { formatTable } from '../../../util/strings';
 
 function requireNonnegative(x: number, name: string): number {
@@ -25,24 +25,45 @@ export class BoundingBox {
 	}
 }
 
-export class CanvasTextBox {
+export class InlineText {
 	public text: string;
+
+	public color: string = 'black';
+
+	public font: string = '24px serif';
+
+	constructor(text: string) {
+		this.text = text;
+	}
+
+	renderTo(
+		ctx: CanvasRenderingContext2D,
+		x: number,
+		y: number,
+		maxWidth?: number,
+	) {
+		ctx.save();
+		ctx.fillStyle = this.color;
+		ctx.font = this.font;
+		ctx.fillText(this.text, x, y, maxWidth);
+		ctx.restore();
+	}
+}
+
+export class CanvasTextBox {
+	public text: InlineText;
 
 	public boundingBox: BoundingBox;
 
-	public color: string;
-
-	constructor(text: string, boundingBox: BoundingBox) {
+	constructor(text: InlineText, boundingBox: BoundingBox) {
 		this.text = text;
 		this.boundingBox = boundingBox;
 	}
 
 	renderTo(ctx: CanvasRenderingContext2D) {
 		ctx.save();
-		ctx.font = '24px serif';
-		ctx.fillStyle = this.color;
 		ctx.textBaseline = 'top';
-		ctx.fillText(this.text, this.boundingBox.x, this.boundingBox.y);
+		this.text.renderTo(ctx, this.boundingBox.x, this.boundingBox.y);
 		ctx.restore();
 	}
 }
@@ -54,7 +75,7 @@ export class CanvasTable {
 
 	public color: string;
 
-	constructor(cells: string[][], boundingBox: BoundingBox) {
+	constructor(cells: InlineText[][], boundingBox: BoundingBox) {
 		const rowCount = cells.length;
 		const columnCount = cells[0].length;
 		const cellWidth = boundingBox.width / columnCount;
@@ -79,7 +100,6 @@ export class CanvasTable {
 	renderTo(ctx: CanvasRenderingContext2D) {
 		for (const row of this.cells) {
 			for (const cell of row) {
-				cell.color = this.color;
 				cell.renderTo(ctx);
 			}
 		}
