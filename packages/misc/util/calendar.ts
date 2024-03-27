@@ -30,6 +30,14 @@ export class Day {
 	add(days: number) {
 		return new Day(this.year, this.month, this.date + days);
 	}
+
+	is(date: Date): boolean {
+		return (
+			this.year == date.getFullYear() &&
+			this.month == date.getMonth() &&
+			this.date == date.getDate()
+		);
+	}
 }
 
 export type Week = { [K in DayOfWeek]: Day } & Array<Day>;
