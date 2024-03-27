@@ -2,9 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 const { CommandManager } = require('../../internal/commands');
+const { registerConfiguredFont } = require('./util/canvasUtils');
 
 class MiscFeature {
 	onLoad() {
+		registerConfiguredFont();
 		fs.readdirSync(path.join(__dirname, 'commands'), {
 			withFileTypes: true,
 		}).forEach((file) => {

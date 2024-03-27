@@ -1,10 +1,22 @@
-import { CanvasRenderingContext2D } from 'canvas';
+import { CanvasRenderingContext2D, registerFont } from 'canvas';
+import config from '../../../config.json';
+
+const FONT_FILE = config.fontFile ?? 'font.ttf';
+export const FONT_FAMILY = config.fontFamily ?? 'serif';
 
 function requireNonnegative(x: number, name: string): number {
 	if (x < 0) {
 		throw new RangeError(`${name} must not be less than ${x}`);
 	}
 	return x;
+}
+
+export function registerConfiguredFont() {
+	try {
+		registerFont(FONT_FILE, { family: FONT_FAMILY });
+	} catch (e) {
+		console.error(e);
+	}
 }
 
 export class BoundingBox {
@@ -43,7 +55,7 @@ export class InlineText {
 
 	public color: string = 'black';
 
-	public font: string = '24px serif';
+	public font: string = `24px ${FONT_FAMILY}`;
 
 	constructor(text: string) {
 		this.text = text;
