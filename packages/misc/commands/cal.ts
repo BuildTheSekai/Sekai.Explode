@@ -1,6 +1,6 @@
 import { createCanvas } from 'canvas';
 import { SimpleSlashCommandBuilder } from '../../../common/SimpleCommand';
-import { LANG } from '../../../util/languages';
+import { LANG, strFormat } from '../../../util/languages';
 import { DayOfWeek, MonthCalendar } from '../util/calendar';
 import { BoundingBox, CanvasTable, InlineText } from '../util/canvasUtils';
 
@@ -50,7 +50,10 @@ export default SimpleSlashCommandBuilder.create(
 		],
 		embeds: [
 			{
-				title: 'カレンダー',
+				title: strFormat(LANG.commands.cal.monthYear, {
+					month: LANG.commands.cal.monthNames[calendar.month],
+					year: calendar.year,
+				}),
 				image: {
 					url: 'attachment://calendar.png',
 				},
