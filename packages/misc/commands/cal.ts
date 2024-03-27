@@ -2,7 +2,12 @@ import { createCanvas } from 'canvas';
 import { SimpleSlashCommandBuilder } from '../../../common/SimpleCommand';
 import { LANG, strFormat } from '../../../util/languages';
 import { DayOfWeek, MonthCalendar } from '../util/calendar';
-import { BoundingBox, CanvasTable, InlineText } from '../util/canvasUtils';
+import {
+	BoundingBox,
+	CanvasTable,
+	CanvasTextBox,
+	InlineText,
+} from '../util/canvasUtils';
 
 function dayColor(day: DayOfWeek) {
 	switch (day) {
@@ -37,9 +42,15 @@ export default SimpleSlashCommandBuilder.create(
 	const canvas = createCanvas(800, 400);
 	const ctx = canvas.getContext('2d');
 	new BoundingBox(0, 0, 800, 400).fill(ctx, 'white');
-	const canvasTable = new CanvasTable(table, new BoundingBox(50, 50, 700, 300));
-	canvasTable.color = 'black';
-	canvasTable.renderTo(ctx);
+	const title = strFormat(LANG.commands.cal.monthYear, {
+		month: LANG.commands.cal.monthNames[calendar.month],
+		year: calendar.year,
+	});
+	const titleStyle = new InlineText(title);
+	titleStyle.color = 'black';
+	titleStyle.font = '48px serif';
+	new CanvasTextBox(titleStyle, new BoundingBox(50, 0, 700, 100)).renderTo(ctx);
+	new CanvasTable(table, new BoundingBox(50, 100, 700, 300)).renderTo(ctx);
 	await interaction.reply({
 		files: [
 			{
@@ -49,10 +60,7 @@ export default SimpleSlashCommandBuilder.create(
 		],
 		embeds: [
 			{
-				title: strFormat(LANG.commands.cal.monthYear, {
-					month: LANG.commands.cal.monthNames[calendar.month],
-					year: calendar.year,
-				}),
+				title: strFormat(title),
 				image: {
 					url: 'attachment://calendar.png',
 				},
