@@ -120,6 +120,29 @@
 		"cal": {
 			"name": "cal",
 			"description": "カレンダーを表示します",
+			"options": {
+				"month": {
+					"name": "month",
+					"description": "月"
+				},
+				"year": {
+					"name": "year",
+					"description": "年"
+				},
+				"weekStart": {
+					"name": "week_start",
+					"description": "週の始まりの曜日"
+				}
+			},
+			"dayNames": [
+				"日曜日",
+				"月曜日",
+				"火曜日",
+				"水曜日",
+				"木曜日",
+				"金曜日",
+				"土曜日"
+			],
 			"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
 			"monthNames": [
 				"1月",
