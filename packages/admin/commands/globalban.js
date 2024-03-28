@@ -431,7 +431,7 @@ module.exports = {
 							description: strFormat(
 								LANG.commands.globalban.subcommands.report.submitted
 									.description,
-								{ resultid },
+								resultid,
 							),
 						},
 					],
