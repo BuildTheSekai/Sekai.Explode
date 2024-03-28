@@ -108,11 +108,11 @@ export class MonthCalendar {
 
 	*weeks(weekStart: DayOfWeek = DayOfWeek.Sunday): Iterable<Week> {
 		const monthFirst = this.firstDay();
-		let firstDate = weekStart - monthFirst.day + 7; // カレンダーの最初の日付 (1日以前、負になり得る)
-		while (firstDate > 1) {
-			firstDate -= 7;
+		let firstDateOffset = weekStart - monthFirst.day + 7; // カレンダーの左上の日付が月の1日の何日後か (0以下)
+		while (firstDateOffset > 0) {
+			firstDateOffset -= 7;
 		}
-		let weekFirst = monthFirst.add(firstDate);
+		let weekFirst = monthFirst.add(firstDateOffset);
 		do {
 			const week = [weekFirst];
 			let day = weekFirst;
