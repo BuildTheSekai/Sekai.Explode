@@ -452,7 +452,8 @@ module.exports = {
 							title: LANG.commands.globalban.subcommands.report.result.title,
 							description: strFormat(
 								LANG.commands.globalban.subcommands.report.result.description,
-								{ reportedby, fxunix },
+								reportedby,
+								fxunix,
 							),
 							color: 0xff0000,
 							fields: [
@@ -462,17 +463,13 @@ module.exports = {
 									value: strFormat(
 										LANG.commands.globalban.subcommands.report.result.field1
 											.value,
-										{ resultid },
+										resultid,
 									),
 								},
 								{
 									name: LANG.commands.globalban.subcommands.report.result.field2
 										.name,
-									value: strFormat(
-										LANG.commands.globalban.subcommands.report.result.field2
-											.value,
-										{ resultreason },
-									),
+									value: resultreason,
 								},
 							],
 						},
