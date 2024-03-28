@@ -2,15 +2,20 @@ const fs = require('fs');
 const path = require('path');
 
 const { CommandManager } = require('../../internal/commands');
+const { registerConfiguredFont } = require('./util/canvasUtils');
 
 class MiscFeature {
 	onLoad() {
+		registerConfiguredFont();
 		fs.readdirSync(path.join(__dirname, 'commands'), {
 			withFileTypes: true,
 		}).forEach((file) => {
 			const ext = path.extname(file.name);
 			if (!file.isFile() || (ext != '.js' && ext != '.ts')) return;
-			const cmds = require(path.join(__dirname, 'commands', file.name));
+			let cmds = require(path.join(__dirname, 'commands', file.name));
+			if ('default' in cmds) {
+				cmds = cmds.default;
+			}
 			CommandManager.default.addCommands(cmds);
 		});
 	}
