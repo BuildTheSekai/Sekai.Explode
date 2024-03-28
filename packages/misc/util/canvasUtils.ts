@@ -84,12 +84,17 @@ export class CanvasTextBox {
 
 	public verticalAlign: 'middle' = 'middle';
 
+	public background?: string;
+
 	constructor(text: InlineText, boundingBox: BoundingBox) {
 		this.text = text;
 		this.boundingBox = boundingBox;
 	}
 
 	renderTo(ctx: CanvasRenderingContext2D) {
+		if (this.background != null) {
+			this.boundingBox.fill(ctx, this.background);
+		}
 		ctx.save();
 		ctx.textBaseline = 'top';
 		ctx.textAlign = this.align;
@@ -116,9 +121,7 @@ export class CanvasTextBox {
 }
 
 export class CanvasTable {
-	private cells: CanvasTextBox[][];
-
-	private boundingBox: BoundingBox;
+	public cells: CanvasTextBox[][];
 
 	public color: string;
 
@@ -141,7 +144,6 @@ export class CanvasTable {
 					),
 			),
 		);
-		this.boundingBox = boundingBox;
 	}
 
 	renderTo(ctx: CanvasRenderingContext2D) {
