@@ -221,7 +221,7 @@
 		},
 		"globalban": {
 			"name": "gban",
-			"description": "作成中",
+			"description": "グローバルBAN",
 			"subcommands": {
 				"sync": {
 					"name": "sync",
@@ -271,6 +271,38 @@
 					"errorTitle": "エラー",
 					"errorFooter": "Sekai.Explode",
 					"errorDescription": "内部エラー: ${0}"
+				},
+				"report": {
+					"name": "report",
+					"description": "危険なユーザーを通報できます。",
+					"modal": {
+						"title": "通報したいユーザーについて",
+						"firstRow": {
+							"label": "ユーザーID",
+							"placeholder": "1063527758292070591"
+						},
+						"secondRow": {
+							"label": "通報理由",
+							"placeholder": "通報理由をここに記入"
+						}
+					},
+					"submitted": {
+						"title": "通報が完了しました!",
+						"description": "ご報告ありがとうございます!\n<@${0}>(${0})の通報が完了しました。"
+					},
+					"error": "configのnotificationChannelを定義しなさい。",
+					"result": {
+						"title": "レポートが届きました!",
+						"description": "通報者: <@${0}>(${0}) | 通報時刻: <t:${1}:f>",
+						"field1": {
+							"name": "ユーザー名",
+							"value": "<@${0}>(${0})"
+						},
+						"field2": {
+							"name": "理由",
+							"value": "${0}"
+						}
+					}
 				}
 			},
 			"addRemoveOptionNames": {

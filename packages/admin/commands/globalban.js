@@ -1,3 +1,5 @@
+import { report } from 'process';
+
 const {
 	SlashCommandBuilder,
 	PermissionsBitField,
@@ -58,11 +60,10 @@ module.exports = {
 						.setRequired(true),
 				),
 		)
-		.addSubcommand(
-			(subcommand) =>
-				subcommand
-					.setName('report')
-					.setDescription('危険なユーザーを通報できます。'), //TODO: 18n
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName(LANG.commands.globalban.subcommands.report.name)
+				.setDescription(LANG.commands.globalban.subcommands.report.description),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
@@ -81,7 +82,7 @@ module.exports = {
 			);
 		}
 
-		if (subcommand !== 'report') {
+		if (subcommand !== LANG.commands.globalban.subcommands.report.name) {
 			// console.log('Defering'); devlog
 			await interaction.deferReply();
 		}
@@ -369,7 +370,7 @@ module.exports = {
 					],
 				});
 			}
-		} else if (subcommand === 'report') {
+		} else if (subcommand === LANG.commands.globalban.subcommands.report.name) {
 			const cooldownTime = 30;
 			if (cooldowns.has(interaction.user.id)) {
 				const expirationTime = cooldowns.get(interaction.user.id);
@@ -384,20 +385,29 @@ module.exports = {
 			}
 			const modal = new ModalBuilder()
 				.setCustomId('gbanReport')
-				.setTitle('通報したいユーザーについて');
+				.setTitle(LANG.commands.globalban.subcommands.report.modal.title);
 			const targetid = new TextInputBuilder()
 				.setCustomId('reportuserid')
-				.setLabel('ユーザーID')
+				.setLabel(
+					LANG.commands.globalban.subcommands.report.modal.firstRow.label,
+				)
 				.setStyle(TextInputStyle.Short)
 				.setMinLength(17)
-				.setPlaceholder('1063527758292070591')
+				.setPlaceholder(
+					LANG.commands.globalban.subcommands.report.modal.firstRow.placeholder,
+				)
 				.setRequired(true);
 
 			const reason = new TextInputBuilder()
 				.setCustomId('reason')
-				.setLabel('通報理由')
+				.setLabel(
+					LANG.commands.globalban.subcommands.report.modal.secondRow.label,
+				)
 				.setStyle(TextInputStyle.Paragraph)
-				.setPlaceholder('通報理由をここに記入')
+				.setPlaceholder(
+					LANG.commands.globalban.subcommands.report.modal.secondRow
+						.placeholder,
+				)
 				.setRequired(true);
 			const firstRow = new ActionRowBuilder().addComponents(targetid);
 			const secondRow = new ActionRowBuilder().addComponents(reason);
@@ -417,33 +427,52 @@ module.exports = {
 				await submitted.reply({
 					embeds: [
 						{
-							title: '通報が完了しました!',
-							description: `ご報告ありがとうございます!\n<@${resultid}>(${resultid})の通報が完了しました。`,
+							title: LANG.commands.globalban.subcommands.report.submitted.title,
+							description: strFormat(
+								LANG.commands.globalban.subcommands.report.submitted
+									.description,
+								{ resultid },
+							),
 						},
 					],
 					ephemeral: true,
 				});
 				if (!config.notificationChannel) {
-					throw new Error('configのnotificationChannelを定義しなさい。');
+					throw new Error(LANG.commands.globalban.subcommands.report.error);
+					return;
 				}
 				const channel = client.channels.cache.get(config.notificationChannel);
 				const d = new Date();
 				const u = d.getTime();
 				const fxunix = Math.floor(u / 1000);
+				const reportedby = interaction.user.id;
 				await channel.send({
 					embeds: [
 						{
-							title: `レポートが届きました!`,
-							description: `通報者: <@${interaction.user.id}>(${interaction.user.id}) | 通報時刻: <t:${fxunix}:f>`,
+							title: LANG.commands.globalban.subcommands.report.result.title,
+							description: strFormat(
+								LANG.commands.globalban.subcommands.report.result.description,
+								{ reportedby, fxunix },
+							),
 							color: 0xff0000,
 							fields: [
 								{
-									name: 'ユーザー名',
-									value: `<@${resultid}>(${resultid})`,
+									name: LANG.commands.globalban.subcommands.report.result.field1
+										.name,
+									value: strFormat(
+										LANG.commands.globalban.subcommands.report.result.field1
+											.value,
+										{ resultid },
+									),
 								},
 								{
-									name: '理由',
-									value: resultreason,
+									name: LANG.commands.globalban.subcommands.report.result.field2
+										.name,
+									value: strFormat(
+										LANG.commands.globalban.subcommands.report.result.field2
+											.value,
+										{ resultreason },
+									),
 								},
 							],
 						},
