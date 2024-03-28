@@ -15,6 +15,8 @@ const HOLIDAY_COLOR = 'red';
 const SUNDAY_COLOR = 'red';
 const SATURDAY_COLOR = 'blue';
 const EXCLUDED_COLOR = 'gray';
+const TODAY_COLOR = 'white';
+const TODAY_BACKGROUND = 'black';
 
 function dayColor(day: DayOfWeek) {
 	switch (day) {
@@ -64,14 +66,15 @@ export default SimpleSlashCommandBuilder.create(
 		for (let i = 0; i < 7; i++) {
 			days.push((weekStart + i) % 7);
 		}
+		let todayIndex;
 		const table = [
 			days.map((i) => {
 				const text = new InlineText(LANG.commands.cal.dayLabels[i]);
 				text.color = dayColor(i as DayOfWeek);
 				return text;
 			}),
-			...Array.from(calendar.weeks(weekStart)).map((week) =>
-				week.map((day) => {
+			...Array.from(calendar.weeks(weekStart)).map((week, i) =>
+				week.map((day, j) => {
 					const text = new InlineText(day.date.toString());
 					text.color = dayColor(day.day);
 					if (day.isHoliday()) {
@@ -81,6 +84,8 @@ export default SimpleSlashCommandBuilder.create(
 						text.color = EXCLUDED_COLOR;
 					}
 					if (day.is(today)) {
+						todayIndex = [i, j];
+						text.color = TODAY_COLOR;
 						text.font = `bold 24px ${FONT_FAMILY}`;
 					}
 					return text;
@@ -100,7 +105,15 @@ export default SimpleSlashCommandBuilder.create(
 		new CanvasTextBox(titleStyle, new BoundingBox(50, 0, 700, 100)).renderTo(
 			ctx,
 		);
-		new CanvasTable(table, new BoundingBox(50, 100, 700, 300)).renderTo(ctx);
+		const canvasTable = new CanvasTable(
+			table,
+			new BoundingBox(50, 100, 700, 300),
+		);
+		if (todayIndex) {
+			const todayCell = canvasTable.cells[todayIndex[0] + 1][todayIndex[1]];
+			todayCell.background = TODAY_BACKGROUND;
+		}
+		canvasTable.renderTo(ctx);
 		await interaction.reply({
 			files: [
 				{
