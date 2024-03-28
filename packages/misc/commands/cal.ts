@@ -10,14 +10,20 @@ import {
 	InlineText,
 } from '../util/canvasUtils';
 
+const WORKDAY_COLOR = 'black';
+const HOLIDAY_COLOR = 'red';
+const SUNDAY_COLOR = 'red';
+const SATURDAY_COLOR = 'blue';
+const EXCLUDED_COLOR = 'gray';
+
 function dayColor(day: DayOfWeek) {
 	switch (day) {
 		case DayOfWeek.Sunday:
-			return 'red';
+			return SUNDAY_COLOR;
 		case DayOfWeek.Saturday:
-			return 'blue';
+			return SATURDAY_COLOR;
 		default:
-			return 'black';
+			return WORKDAY_COLOR;
 	}
 }
 
@@ -68,8 +74,11 @@ export default SimpleSlashCommandBuilder.create(
 				week.map((day) => {
 					const text = new InlineText(day.date.toString());
 					text.color = dayColor(day.day);
+					if (day.isHoliday()) {
+						text.color = HOLIDAY_COLOR;
+					}
 					if (!calendar.includes(day)) {
-						text.color = 'gray';
+						text.color = EXCLUDED_COLOR;
 					}
 					if (day.is(today)) {
 						text.font = `bold 24px ${FONT_FAMILY}`;

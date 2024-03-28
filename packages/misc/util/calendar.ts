@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const DayOfWeek = Object.freeze({
 	Sunday: 0,
 	Monday: 1,
@@ -9,6 +11,25 @@ export const DayOfWeek = Object.freeze({
 });
 
 export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek];
+
+const HOLIDAYS_CSV = 'https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv';
+
+let holidays = new Map<string, string>();
+
+async function getHolidays() {
+	const res = await axios.get<ArrayBuffer>(HOLIDAYS_CSV, {
+		responseType: 'arraybuffer',
+	});
+	const text = new TextDecoder('shift_jis').decode(res.data);
+	const data = text
+		.split('\n')
+		.map((row) => row.trim()) // '\r' を削除
+		.filter((row) => row != '') // 空行を削除
+		.slice(1) // 見出し行を削除
+		.map((row) => row.split(',') as [string, string]);
+	holidays = new Map(data);
+}
+getHolidays();
 
 export class Day {
 	public readonly year: number;
@@ -37,6 +58,14 @@ export class Day {
 			this.month == date.getMonth() &&
 			this.date == date.getDate()
 		);
+	}
+
+	toString() {
+		return `${this.year}/${this.month + 1}/${this.date}`;
+	}
+
+	isHoliday() {
+		return holidays.has(this.toString());
 	}
 }
 
