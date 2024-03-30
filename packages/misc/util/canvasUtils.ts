@@ -1,5 +1,5 @@
 import { CanvasRenderingContext2D, registerFont } from 'canvas';
-import config from '../../../config.json';
+import config from '../../../internal/config';
 
 const FONT_FILE = config.fontFile ?? 'font.ttf';
 export const FONT_FAMILY = config.fontFamily ?? 'serif';

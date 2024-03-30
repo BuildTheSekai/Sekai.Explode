@@ -1,15 +1,4 @@
-import * as path from 'path';
-import * as config from '../config.json';
 import * as LANG from '../language/default.json';
-
-const configLANG: typeof import('../language/default.json') = require(
-	path.join(
-		__dirname,
-		'..',
-		'language',
-		(config.language ?? 'default') + '.json',
-	),
-);
 
 function assignDeep(target: Record<string, unknown>, source: unknown) {
 	for (const [key, value] of Object.entries(source)) {
@@ -22,7 +11,9 @@ function assignDeep(target: Record<string, unknown>, source: unknown) {
 	return target;
 }
 
-assignDeep(LANG, configLANG);
+export function setLanguage(source: unknown) {
+	assignDeep(LANG, source);
+}
 
 class FormatSyntaxError extends SyntaxError {
 	constructor(message: string) {
