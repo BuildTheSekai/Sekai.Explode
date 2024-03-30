@@ -7,7 +7,7 @@ require('colors');
 import { Client, GatewayIntentBits, ActivityType } from 'discord.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { token, syslogChannel } from './config.json';
+import { token, syslogChannel } from './internal/config';
 process.env['FFMPEG_PATH'] = path.join(__dirname, 'ffmpeg');
 
 //!Load Internal dir code
