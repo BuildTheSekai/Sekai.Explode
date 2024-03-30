@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as config from '../config.json';
+import config from '../internal/config';
 import * as LANG from '../language/default.json';
 
 const configLANG: typeof import('../language/default.json') = require(
