@@ -1,3 +1,7 @@
+# おしらせ
+`Sekai.Explode`は4/1をもって終了しました。(笑)
+
+
 # Sekai.explode - Simple Discord Bot w/discord.js@v14
 
 ![Alt](https://repobeats.axiom.co/api/embed/b7fc33791d3233660e7c02524ace22c31b66e890.svg "Repobeats analytics image")
