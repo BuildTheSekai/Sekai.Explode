@@ -1,5 +1,4 @@
 # おしらせ
-`Sekai.Explode`は4/1をもって終了しました。(笑)
 
 
 # Sekai.explode - Simple Discord Bot w/discord.js@v14
