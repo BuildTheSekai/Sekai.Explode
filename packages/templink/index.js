@@ -1,11 +1,9 @@
+const { Feature } = require('../../common/Feature');
 const { CommandManager } = require('../../internal/commands');
 const templinkCommand = require('./command');
 const { enableTempLinks, disableTempLinks } = require('./templinks');
 
-/**
- * @implements {import("../../util/types").Feature}
- */
-class TempLinkFeature {
+class TempLinkFeature extends Feature {
 	onLoad() {
 		enableTempLinks();
 		CommandManager.default.addCommands(templinkCommand);

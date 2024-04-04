@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
+const { Feature } = require('../../common/Feature');
 const { CommandManager } = require('../../internal/commands');
 const { registerConfiguredFont } = require('./util/canvasUtils');
 
-class MiscFeature {
+class MiscFeature extends Feature {
 	onLoad() {
 		registerConfiguredFont();
 		fs.readdirSync(path.join(__dirname, 'commands'), {

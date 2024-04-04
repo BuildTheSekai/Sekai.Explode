@@ -8,10 +8,10 @@ import {
 	getDuration,
 	deleteSavedQueues,
 } from './players';
-import { Feature } from '../../util/types';
+import { Feature } from '../../common/Feature';
 import { Client } from 'discord.js';
 
-class PlayerFeature implements Feature {
+class PlayerFeature extends Feature {
 	/** @type {Player | null} */
 	#player: Player | null = null;
 
