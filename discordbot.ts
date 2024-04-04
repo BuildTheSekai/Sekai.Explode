@@ -1,5 +1,4 @@
 import { teeWrite } from './internal/logger';
-import { ClientMessageHandler } from './internal/messages';
 
 //* Discord.js Bot - by ringoXD -
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1';
@@ -54,7 +53,6 @@ console.log(
 const client = new Client(options);
 console.log(LANG.discordbot.main.setupActivityCalling);
 activity.setupActivity(client);
-let messageHandler: ClientMessageHandler | undefined;
 
 const featuresLoadPromise = fs
 	.readdir(path.join(__dirname, 'packages'))
@@ -106,7 +104,6 @@ client.on('ready', async (readyClient) => {
 	const SyslogChannel = client.channels.cache.get(syslogChannel);
 	assert(SyslogChannel.isTextBased());
 	SyslogChannel.send(LANG.discordbot.ready.sysLog);
-	messageHandler = new ClientMessageHandler(readyClient);
 });
 
 onShutdown(async () => {
@@ -126,8 +123,6 @@ onShutdown(async () => {
 });
 
 client.login(token);
-
-client.on('messageCreate', (message) => messageHandler?.handleMessage(message));
 
 //!EVENTS
 
