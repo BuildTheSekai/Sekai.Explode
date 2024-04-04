@@ -20,7 +20,7 @@ mongodb.connectMongoose();
 import { LANG, strFormat } from './util/languages';
 import { CommandManager } from './internal/commands';
 import assert from 'assert';
-import { Feature } from './util/types';
+import { Feature } from './common/Feature';
 
 const creset = '\x1b[0m';
 const cgreen = '\x1b[32m';
@@ -65,9 +65,10 @@ const featuresLoadPromise = fs
 				const module = await import(file);
 				const feature: Feature = module.feature;
 				if (feature == null) {
+					console.log(module);
 					throw new TypeError(`${file} feature is undefined`);
 				}
-				await feature.onLoad?.(client);
+				await feature.load(client);
 				return feature;
 			}),
 		),
