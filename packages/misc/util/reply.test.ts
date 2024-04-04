@@ -1,4 +1,4 @@
-import { ReplyPattern } from './messages';
+import { ReplyPattern } from './reply';
 
 test('ReplyPattern.match', () => {
 	const pattern1 = new ReplyPattern('それはそう', 'https://soreha.so/');
