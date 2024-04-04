@@ -12,9 +12,6 @@ process.env['FFMPEG_PATH'] = path.join(__dirname, 'ffmpeg');
 //!Load Internal dir code
 import { onShutdown } from './internal/schedules';
 import activity from './internal/activity';
-import mongodb from './internal/mongodb';
-
-mongodb.connectMongoose();
 
 import { LANG, strFormat } from './util/languages';
 import { CommandManager } from './internal/commands';
@@ -118,7 +115,6 @@ onShutdown(async () => {
 			.then(() =>
 				console.log(cgreen + LANG.discordbot.shutdown.loggedOut + creset),
 			),
-		mongodb.connection.close(),
 	]);
 });
 

@@ -1,5 +1,3 @@
-import { report } from 'process';
-
 const {
 	SlashCommandBuilder,
 	PermissionsBitField,
@@ -8,7 +6,7 @@ const {
 	TextInputStyle,
 	ActionRowBuilder,
 } = require('discord.js');
-const mongodb = require('../../../internal/mongodb'); //*MongoDB
+const { feature: db } = require('db'); //*MongoDB
 const { AdminUserIDs } = require('../../../config.json');
 const Pager = require('../../../util/pager');
 const { LANG, strFormat } = require('../../../util/languages');
@@ -96,7 +94,7 @@ module.exports = {
 			}
 			try {
 				// データベースから全てのユーザーを取得
-				const userCollection = mongodb.connection.collection('globalBans');
+				const userCollection = db.connection.collection('globalBans');
 				const allUsers = await userCollection.find({}).toArray();
 
 				// ユーザー情報をログに表示
@@ -175,7 +173,7 @@ module.exports = {
 		//*add/rm
 		if (subcommand === LANG.commands.globalban.subcommands.add.name) {
 			try {
-				const existingBan = await mongodb.connection
+				const existingBan = await db.connection
 					.collection('globalBans')
 					.findOne({ userId: user.id });
 				if (existingBan) {
@@ -185,7 +183,7 @@ module.exports = {
 						]),
 					);
 				}
-				await mongodb.connection.collection('globalBans').insertOne({
+				await db.connection.collection('globalBans').insertOne({
 					userId: user.id,
 					userName: user.tag,
 					reason: reason,
@@ -239,7 +237,7 @@ module.exports = {
 			}
 		} else if (subcommand === LANG.commands.globalban.subcommands.remove.name) {
 			try {
-				const existingBan = await mongodb.connection
+				const existingBan = await db.connection
 					.collection('globalBans')
 					.findOne({ userId: user.id });
 				if (!existingBan) {
@@ -250,7 +248,7 @@ module.exports = {
 					);
 				}
 
-				await mongodb.connection
+				await db.connection
 					.collection('globalBans')
 					.deleteOne({ userId: user.id });
 				let done = 0;
@@ -303,7 +301,7 @@ module.exports = {
 			//*LIST
 		} else if (subcommand === LANG.commands.globalban.subcommands.list.name) {
 			try {
-				const userCollection = mongodb.connection.collection('globalBans');
+				const userCollection = db.connection.collection('globalBans');
 				const bans = await userCollection.find({}).toArray();
 				const pager = new Pager(
 					bans.map((ban) =>
