@@ -16,8 +16,8 @@
  */
 
 import axios from 'axios';
-import { strFormat, LANG } from '../util/languages';
-import mongodb from './mongodb';
+import { strFormat, LANG } from '../../../util/languages';
+import mongodb from '../../../internal/mongodb';
 import { Collection } from 'mongoose';
 import { Client, Message } from 'discord.js';
 
