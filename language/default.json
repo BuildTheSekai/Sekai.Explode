@@ -19,6 +19,7 @@
 			"presenceNameLoading": "Loading...",
 			"presenceStateLoading": "Sekai.explode is now loading...",
 			"commandsRegistering": "Registering commands...",
+			"readyAndTime": "${ready} (${time})",
 			"commandsReady": "Ready!"
 		},
 		"shutdown": {
@@ -116,6 +117,49 @@
 		}
 	},
 	"commands": {
+		"cal": {
+			"name": "cal",
+			"description": "カレンダーを表示します",
+			"options": {
+				"month": {
+					"name": "month",
+					"description": "月"
+				},
+				"year": {
+					"name": "year",
+					"description": "年"
+				},
+				"weekStart": {
+					"name": "week_start",
+					"description": "週の始まりの曜日"
+				}
+			},
+			"dayNames": [
+				"日曜日",
+				"月曜日",
+				"火曜日",
+				"水曜日",
+				"木曜日",
+				"金曜日",
+				"土曜日"
+			],
+			"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+			"monthNames": [
+				"1月",
+				"2月",
+				"3月",
+				"4月",
+				"5月",
+				"6月",
+				"7月",
+				"8月",
+				"9月",
+				"10月",
+				"11月",
+				"12月"
+			],
+			"monthYear": "${year}年${month}"
+		},
 		"check": {
 			"name": "check",
 			"description": "Ping Checker",
@@ -220,7 +264,7 @@
 		},
 		"globalban": {
 			"name": "gban",
-			"description": "作成中",
+			"description": "グローバルBAN",
 			"subcommands": {
 				"sync": {
 					"name": "sync",
@@ -270,6 +314,37 @@
 					"errorTitle": "エラー",
 					"errorFooter": "Sekai.Explode",
 					"errorDescription": "内部エラー: ${0}"
+				},
+				"report": {
+					"name": "report",
+					"description": "危険なユーザーを通報できます。",
+					"modal": {
+						"title": "通報したいユーザーについて",
+						"firstRow": {
+							"label": "ユーザーID",
+							"placeholder": "1063527758292070591"
+						},
+						"secondRow": {
+							"label": "通報理由",
+							"placeholder": "通報理由をここに記入"
+						}
+					},
+					"submitted": {
+						"title": "通報が完了しました!",
+						"description": "ご報告ありがとうございます!\n<@${0}>(${0})の通報が完了しました。"
+					},
+					"error": "configのnotificationChannelを定義しなさい。",
+					"result": {
+						"title": "レポートが届きました!",
+						"description": "通報者: <@${0}>(${0}) | 通報時刻: <t:${1}:f>",
+						"field1": {
+							"name": "ユーザー名",
+							"value": "<@${0}>(${0})"
+						},
+						"field2": {
+							"name": "理由"
+						}
+					}
 				}
 			},
 			"addRemoveOptionNames": {

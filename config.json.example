@@ -26,5 +26,7 @@
 	"rconpass1": "yourpassword1234",
 	"syslogChannel": "1151139585791901746",
 	"notificationChannel": "1151139585791901746",
-	"language": "default"
+	"language": "default",
+	"fontFile": "font.ttf",
+	"fontFamily": "sans-serif"
 }
