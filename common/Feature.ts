@@ -29,7 +29,6 @@ export abstract class Feature {
 	async unload() {
 		if (!this.unloading) {
 			this.unloading = true;
-			const dependencies = this.dependencies;
 			// 依存元の機能をアンロードした後にこの機能をアンロードする
 			await Promise.all(this.usedBy.map((dependency) => dependency.unload()));
 			console.log(`Unloading ${this.name} feature`);

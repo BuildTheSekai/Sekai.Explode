@@ -15,8 +15,7 @@ import {
 	GuildNodeCreateOptions,
 } from 'discord-player';
 import Timespan from '../../util/timespan';
-import mongodb from '../../internal/mongodb';
-import { Collection } from 'mongoose';
+import { feature as mongodb } from 'db';
 
 /** volumes コレクションのドキュメント */
 interface VolumeSchema {
