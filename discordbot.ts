@@ -61,7 +61,6 @@ const featuresLoadPromise = fs
 	.then((files) =>
 		Promise.all(
 			files.map(async (file) => {
-				console.log(`loading ${file} feature`);
 				const module = await import(file);
 				const feature: Feature = module.feature;
 				if (feature == null) {
@@ -77,7 +76,7 @@ const featuresLoadPromise = fs
 client.on('ready', async (readyClient) => {
 	const features = await featuresLoadPromise;
 	await Promise.all(
-		features.map((feature) => feature.onClientReady?.(readyClient)),
+		features.map((feature) => feature.onClientReady(readyClient)),
 	);
 	console.log(
 		strFormat(LANG.discordbot.ready.loggedIn, {
@@ -115,7 +114,7 @@ onShutdown(async () => {
 	assert(SyslogChannel.isTextBased());
 	await SyslogChannel.send(LANG.discordbot.shutdown.sysLog);
 	const features = await featuresLoadPromise;
-	await Promise.all(features.map((feature) => feature.onUnload?.()));
+	await Promise.all(features.map((feature) => feature.unload()));
 	await Promise.all([
 		client
 			.destroy()

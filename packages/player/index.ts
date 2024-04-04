@@ -10,10 +10,15 @@ import {
 } from './players';
 import { Feature } from '../../common/Feature';
 import { Client } from 'discord.js';
+import * as db from 'db';
 
 class PlayerFeature extends Feature {
 	/** @type {Player | null} */
 	#player: Player | null = null;
+
+	name = 'player';
+
+	dependencies = [db.feature];
 
 	onLoad(client: Client<boolean>) {
 		console.log(LANG.discordbot.main.playerLoading);
