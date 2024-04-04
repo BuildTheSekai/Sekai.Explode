@@ -2,6 +2,8 @@ import { Feature } from '../../common/Feature';
 import { CommandManager } from '../../internal/commands';
 
 class WebApiFeature extends Feature {
+	name = 'web-api';
+
 	onLoad() {
 		CommandManager.default.addCommands([
 			require('./commands/check'),

@@ -4,6 +4,8 @@ const templinkCommand = require('./command');
 const { enableTempLinks, disableTempLinks } = require('./templinks');
 
 class TempLinkFeature extends Feature {
+	name = 'templink';
+
 	onLoad() {
 		enableTempLinks();
 		CommandManager.default.addCommands(templinkCommand);

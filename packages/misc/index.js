@@ -6,6 +6,8 @@ const { CommandManager } = require('../../internal/commands');
 const { registerConfiguredFont } = require('./util/canvasUtils');
 
 class MiscFeature extends Feature {
+	name = 'misc';
+
 	onLoad() {
 		registerConfiguredFont();
 		fs.readdirSync(path.join(__dirname, 'commands'), {
