@@ -26,23 +26,23 @@ class CollectionWrapper<T extends Document> implements Collection<Document> {
 		this.handle = handle;
 	}
 
-	find(query: Query<Document>): Cursor<Document> {
-		return new CursorWrapper(this.handle.find(query));
+	find(query: Query<T>): Cursor<T> {
+		return new CursorWrapper(this.handle.find(query)) as Cursor<any>;
 	}
 
-	findOne(query: Query<Document>): Promise<Document> {
-		return this.handle.findOne(query);
+	findOne(query: Query<T>): Promise<T | null> {
+		return this.handle.findOne(query) as Promise<any>;
 	}
 
-	async insertOne(document: Document): Promise<void> {
+	async insertOne(document: T): Promise<void> {
 		await this.handle.insertOne(document as any);
 	}
 
-	async insertMany(documents: Document[]): Promise<void> {
+	async insertMany(documents: T[]): Promise<void> {
 		await this.handle.insertMany(documents as any[]);
 	}
 
-	async updateOne(query: Query<Document>, document: Document): Promise<void> {
+	async updateOne(query: Query<T>, document: T): Promise<void> {
 		await this.handle.updateOne(
 			query,
 			{ $set: document as any },
@@ -50,11 +50,11 @@ class CollectionWrapper<T extends Document> implements Collection<Document> {
 		);
 	}
 
-	async deleteOne(query: Query<Document>): Promise<void> {
+	async deleteOne(query: Query<T>): Promise<void> {
 		await this.handle.deleteOne(query);
 	}
 
-	async deleteMany(query: Query<Document>): Promise<void> {
+	async deleteMany(query: Query<T>): Promise<void> {
 		await this.handle.deleteMany(query);
 	}
 }

@@ -11,7 +11,7 @@ export interface Connection {
 }
 
 export interface Collection<T extends Document> {
-	findOne(query: Query<T>): Promise<T>;
+	findOne(query: Query<T>): Promise<T | null>;
 
 	find(query: Query<T>): Cursor<T>;
 
