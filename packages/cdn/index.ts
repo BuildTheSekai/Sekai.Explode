@@ -1,7 +1,10 @@
+import { Feature } from '../../common/Feature';
 import { CommandManager } from '../../internal/commands';
 import upload from './upload';
 
-class CdnFeature {
+class CdnFeature extends Feature {
+	name = 'cdn';
+
 	onLoad() {
 		CommandManager.default.addCommands(upload);
 	}

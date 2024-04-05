@@ -133,3 +133,6 @@ dist
 
 # Font file
 *.ttf
+
+# LokiJS database file
+database.json
