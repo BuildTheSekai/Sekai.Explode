@@ -15,7 +15,7 @@ import {
 	GuildNodeCreateOptions,
 } from 'discord-player';
 import Timespan from '../../util/timespan';
-import { Document, feature as mongodb } from 'db';
+import { Document, Collection, feature as mongodb } from 'db';
 
 /** volumes コレクションのドキュメント */
 interface VolumeSchema extends Document {
@@ -264,7 +264,7 @@ const functions = {
 		};
 	},
 
-	// FIXME: LokiJS だと動かない。MongoDB でもエラーが出る
+	// FIXME: LokiJS だと動かない
 	/**
 	 * 現在のキューの状態をデータベースに保存する。
 	 * @param queue キュー
@@ -293,13 +293,14 @@ const functions = {
 			);
 		const tracks = queue.tracks.toArray();
 		await guildQueueTrackCollection.deleteMany({ guild });
-		await guildQueueTrackCollection.insertMany(
-			tracks.map((track, index) => ({
-				guild,
-				index,
-				track: track.serialize(),
-			})),
-		);
+		const trackDocuments = tracks.map((track, index) => ({
+			guild,
+			index,
+			track: track.serialize(),
+		}));
+		if (trackDocuments.length > 0) {
+			await guildQueueTrackCollection.insertMany(trackDocuments);
+		}
 	},
 
 	/**
@@ -312,8 +313,7 @@ const functions = {
 		await guildQueueCollection.deleteMany({
 			_id: { $in: guilds },
 		});
-		/** @type {import("mongoose").Collection<GuildQueueTrackSchema>} */
-		const guildQueueTrackCollection =
+		const guildQueueTrackCollection: Collection<GuildQueueTrackSchema> =
 			mongodb.connection.collection<GuildQueueTrackSchema>(
 				'guild_queue_tracks',
 			);

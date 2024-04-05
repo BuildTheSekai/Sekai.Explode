@@ -13,12 +13,15 @@ import { Client } from 'discord.js';
 import * as db from 'db';
 
 class PlayerFeature extends Feature {
-	/** @type {Player | null} */
 	#player: Player | null = null;
 
 	name = 'player';
 
 	dependencies = [db.feature];
+
+	private deletePromise?: Promise<void>;
+
+	private alive = true;
 
 	onLoad(client: Client<boolean>) {
 		console.log(LANG.discordbot.main.playerLoading);
@@ -66,12 +69,16 @@ class PlayerFeature extends Feature {
 			});
 		});
 
-		player.events.on('playerFinish', (queue) =>
-			deleteSavedQueues(queue.guild.id),
-		);
-		player.events.on('queueDelete', (queue) =>
-			deleteSavedQueues(queue.guild.id),
-		);
+		player.events.on('playerFinish', (queue) => {
+			if (this.alive) {
+				this.deletePromise = deleteSavedQueues(queue.guild.id);
+			}
+		});
+		player.events.on('queueDelete', (queue) => {
+			if (this.alive) {
+				this.deletePromise = deleteSavedQueues(queue.guild.id);
+			}
+		});
 
 		player.on('error', () => console.log(LANG.discordbot.playerError.message));
 	}
@@ -89,6 +96,8 @@ class PlayerFeature extends Feature {
 			console.log(guildId);
 			await saveQueue(queue as GuildQueue<any>);
 		}
+		await this.deletePromise;
+		this.alive = false;
 		await player.destroy();
 	}
 }
