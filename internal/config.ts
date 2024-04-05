@@ -13,6 +13,20 @@ const internalLinkConfigSchema = z.object({
 	linkPort: z.string(),
 });
 
+const mongoDBConfigSchema = z.object({
+	database: z.literal('mongo').optional(),
+	mongoDBhost: z.string(),
+	mongoDBport: z.string(),
+	mongoDBuser: z.string(),
+	mongoDBpass: z.string(),
+	mongoDBdatabase: z.string(),
+});
+
+const lokiJSConfigSchema = z.object({
+	database: z.literal('loki'),
+	lokiJSfile: z.string().optional(),
+});
+
 const configSchema = z
 	.object({
 		token: z.string(),
@@ -24,17 +38,13 @@ const configSchema = z
 		cfPurgeUrl: z.string().optional(),
 		AdminUserIDs: z.array(z.string()),
 		replyCustomizeAllowedUsers: z.array(z.string()).optional(),
-		mongoDBhost: z.string(),
-		mongoDBport: z.string(),
-		mongoDBuser: z.string(),
-		mongoDBpass: z.string(),
-		mongoDBdatabase: z.string(),
 		syslogChannel: z.string(),
 		notificationChannel: z.string(),
 		language: z.string().optional(),
 		fontFile: z.string().optional(),
 		fontFamily: z.string().optional(),
 	})
+	.and(mongoDBConfigSchema.or(lokiJSConfigSchema))
 	.and(tempLinkSrvConfigSchema.or(internalLinkConfigSchema));
 
 function loadJson(path: string) {

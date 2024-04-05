@@ -31,13 +31,19 @@ export class LokiJSWrapper implements Connection {
 	}
 
 	close(): Promise<void> {
+		const handle = this.handle;
 		return new Promise((resolve, reject) =>
-			this.handle.close((err) => {
-				if (err == null) {
-					resolve();
-				} else {
-					reject(err);
+			handle.save((saveError) => {
+				if (saveError != null) {
+					reject(saveError);
 				}
+				handle.close((closeError) => {
+					if (closeError == null) {
+						resolve();
+					} else {
+						reject(closeError);
+					}
+				});
 			}),
 		);
 	}

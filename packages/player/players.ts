@@ -264,6 +264,7 @@ const functions = {
 		};
 	},
 
+	// FIXME: LokiJS だと動かない。MongoDB でもエラーが出る
 	/**
 	 * 現在のキューの状態をデータベースに保存する。
 	 * @param queue キュー
