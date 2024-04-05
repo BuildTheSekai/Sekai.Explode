@@ -2,7 +2,9 @@ export type Document = {
 	[K: string]: any;
 };
 
-export type Query<T> = Partial<Document> & { _id?: any };
+export type Query<T> = { [P in keyof T]?: T[P] | { $in?: T[P][] } } & {
+	_id?: any;
+};
 
 export interface Connection {
 	collection<T extends Document>(name: string): Collection<T>;

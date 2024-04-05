@@ -17,7 +17,7 @@
 
 import axios from 'axios';
 import { strFormat, LANG } from '../../../util/languages';
-import { feature as mongodb, Collection, Document } from 'db';
+import { feature as db, Collection, Document } from 'db';
 import { Client, Message } from 'discord.js';
 import { ReplyPattern, ReplySchema } from './reply';
 
@@ -27,11 +27,11 @@ interface ReplyGuildSchema extends Document {
 }
 
 function getReplyGuildCollection(): Collection<ReplyGuildSchema> {
-	return mongodb.connection.collection('replyGuilds');
+	return db.connection.collection('replyGuilds');
 }
 
 function getReplyCollection(): Collection<ReplySchema> {
-	return mongodb.connection.collection('replies');
+	return db.connection.collection('replies');
 }
 
 export { ReplyPattern } from './reply';
