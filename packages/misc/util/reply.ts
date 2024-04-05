@@ -1,6 +1,7 @@
 import { strFormat, LANG } from '../../../util/languages';
+import { Document } from 'db';
 
-export interface ReplySchema {
+export interface ReplySchema extends Document {
 	client: string;
 	guild: string;
 	message: string;

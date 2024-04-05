@@ -17,12 +17,11 @@
 
 import axios from 'axios';
 import { strFormat, LANG } from '../../../util/languages';
-import { feature as mongodb } from 'db';
-import { Collection } from 'mongoose';
+import { feature as mongodb, Collection, Document } from 'db';
 import { Client, Message } from 'discord.js';
 import { ReplyPattern, ReplySchema } from './reply';
 
-interface ReplyGuildSchema {
+interface ReplyGuildSchema extends Document {
 	client: string;
 	guild: string;
 }
