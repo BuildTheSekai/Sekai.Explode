@@ -15,10 +15,10 @@ import {
 	GuildNodeCreateOptions,
 } from 'discord-player';
 import Timespan from '../../util/timespan';
-import { feature as mongodb } from 'db';
+import { Document, feature as mongodb } from 'db';
 
 /** volumes コレクションのドキュメント */
-interface VolumeSchema {
+interface VolumeSchema extends Document {
 	/** ギルド ID */
 	guild: string;
 
@@ -27,7 +27,7 @@ interface VolumeSchema {
 }
 
 /** guild_queue コレクションのドキュメント */
-interface GuildQueueSchema {
+interface GuildQueueSchema extends Document {
 	/** ギルド ID */
 	_id: string;
 
@@ -54,7 +54,7 @@ interface GuildQueueSchema {
 }
 
 /** guild_queue_tracks コレクションのドキュメント */
-interface GuildQueueTrackSchema {
+interface GuildQueueTrackSchema extends Document {
 	/** ギルド ID */
 	guild: string;
 
@@ -202,12 +202,9 @@ const functions = {
 		await volumeCollection.updateOne(
 			{ guild: guildId },
 			{
-				$set: {
-					guild: guildId,
-					volume: volume,
-				},
+				guild: guildId,
+				volume: volume,
 			},
-			{ upsert: true },
 		);
 	},
 

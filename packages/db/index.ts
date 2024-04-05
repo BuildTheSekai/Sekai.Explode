@@ -3,6 +3,10 @@ import { Feature } from '../../common/Feature';
 import { LANG } from '../../util/languages';
 import mongoose from 'mongoose';
 import config from '../../internal/config';
+import { Connection } from './types';
+import { MongoDBWrapper } from './implementations/MongoDB';
+
+export * from './types';
 
 const connection = mongoose.connection;
 connection.on('connecting', function () {
@@ -21,7 +25,7 @@ connection.on('disconnected', function () {
 class DbFeature extends Feature {
 	name = 'db';
 
-	connection = connection;
+	connection: Connection = new MongoDBWrapper(connection);
 
 	async onLoad(client: Client<boolean>) {
 		console.log(LANG.internal.mongodb.called);
