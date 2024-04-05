@@ -1,13 +1,9 @@
+import { Feature } from '../../common/Feature';
 import { CommandManager } from '../../internal/commands';
 
-/**
- * @typedef {import("../../util/types").Feature} Feature
- */
+class WebApiFeature extends Feature {
+	name = 'web-api';
 
-/**
- * @implements {Feature}
- */
-class WebApiFeature {
 	onLoad() {
 		CommandManager.default.addCommands([
 			require('./commands/check'),

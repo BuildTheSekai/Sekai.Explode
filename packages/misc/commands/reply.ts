@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { LANG } from '../../../util/languages';
-import { ClientMessageHandler, ReplyPattern } from '../../../internal/messages';
+import { ClientMessageHandler, ReplyPattern } from '../util/messages';
 import Pager from '../../../util/pager';
 import config from '../../../internal/config';
 import { Command } from '../../../util/types';

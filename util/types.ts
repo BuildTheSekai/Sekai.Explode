@@ -36,23 +36,3 @@ export type Split<
 	S extends string,
 	D extends string,
 > = S extends `${infer T}${D}${infer U}` ? T | Split<U, D> : S;
-
-/**
- * 機能の1単位を表すオブジェクト
- */
-export interface Feature {
-	/**
-	 * 読み込まれた時の処理
-	 */
-	onLoad?(client: Client<boolean>): PromiseLike<void> | void;
-
-	/**
-	 * クライアントにログインしたときの処理
-	 */
-	onClientReady?(client: Client<true>): PromiseLike<void> | void;
-
-	/**
-	 * 終了したときの処理
-	 */
-	onUnload?(): PromiseLike<void> | void;
-}

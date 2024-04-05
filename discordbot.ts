@@ -1,5 +1,4 @@
 import { teeWrite } from './internal/logger';
-import { ClientMessageHandler } from './internal/messages';
 
 //* Discord.js Bot - by ringoXD -
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1';
@@ -13,14 +12,11 @@ process.env['FFMPEG_PATH'] = path.join(__dirname, 'ffmpeg');
 //!Load Internal dir code
 import { onShutdown } from './internal/schedules';
 import activity from './internal/activity';
-import mongodb from './internal/mongodb';
-
-mongodb.connectMongoose();
 
 import { LANG, strFormat } from './util/languages';
 import { CommandManager } from './internal/commands';
 import assert from 'assert';
-import { Feature } from './util/types';
+import { Feature } from './common/Feature';
 
 const creset = '\x1b[0m';
 const cgreen = '\x1b[32m';
@@ -54,20 +50,19 @@ console.log(
 const client = new Client(options);
 console.log(LANG.discordbot.main.setupActivityCalling);
 activity.setupActivity(client);
-let messageHandler: ClientMessageHandler | undefined;
 
 const featuresLoadPromise = fs
 	.readdir(path.join(__dirname, 'packages'))
 	.then((files) =>
 		Promise.all(
 			files.map(async (file) => {
-				console.log(`loading ${file} feature`);
 				const module = await import(file);
 				const feature: Feature = module.feature;
 				if (feature == null) {
+					console.log(module);
 					throw new TypeError(`${file} feature is undefined`);
 				}
-				await feature.onLoad?.(client);
+				await feature.load(client);
 				return feature;
 			}),
 		),
@@ -76,7 +71,7 @@ const featuresLoadPromise = fs
 client.on('ready', async (readyClient) => {
 	const features = await featuresLoadPromise;
 	await Promise.all(
-		features.map((feature) => feature.onClientReady?.(readyClient)),
+		features.map((feature) => feature.onClientReady(readyClient)),
 	);
 	console.log(
 		strFormat(LANG.discordbot.ready.loggedIn, {
@@ -106,7 +101,6 @@ client.on('ready', async (readyClient) => {
 	const SyslogChannel = client.channels.cache.get(syslogChannel);
 	assert(SyslogChannel.isTextBased());
 	SyslogChannel.send(LANG.discordbot.ready.sysLog);
-	messageHandler = new ClientMessageHandler(readyClient);
 });
 
 onShutdown(async () => {
@@ -114,20 +108,17 @@ onShutdown(async () => {
 	assert(SyslogChannel.isTextBased());
 	await SyslogChannel.send(LANG.discordbot.shutdown.sysLog);
 	const features = await featuresLoadPromise;
-	await Promise.all(features.map((feature) => feature.onUnload?.()));
+	await Promise.all(features.map((feature) => feature.unload()));
 	await Promise.all([
 		client
 			.destroy()
 			.then(() =>
 				console.log(cgreen + LANG.discordbot.shutdown.loggedOut + creset),
 			),
-		mongodb.connection.close(),
 	]);
 });
 
 client.login(token);
-
-client.on('messageCreate', (message) => messageHandler?.handleMessage(message));
 
 //!EVENTS
 
