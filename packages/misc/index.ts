@@ -7,9 +7,12 @@ import { Feature } from '../../common/Feature';
 import { CommandManager } from '../../internal/commands';
 import { registerConfiguredFont } from './util/canvasUtils';
 import { Client } from 'discord.js';
+import config from '../../internal/config';
 
 class MiscFeature extends Feature {
 	name = 'misc';
+
+	enabled = config.features?.misc ?? true;
 
 	messageHandler?: ClientMessageHandler;
 

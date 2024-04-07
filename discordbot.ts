@@ -62,6 +62,14 @@ const featuresLoadPromise = fs
 					console.log(module);
 					throw new TypeError(`${file} feature is undefined`);
 				}
+				return feature;
+			}),
+		),
+	)
+	.then((features) => features.filter((feature) => feature.enabled))
+	.then((features) =>
+		Promise.all(
+			features.map(async (feature) => {
 				await feature.load(client);
 				return feature;
 			}),
