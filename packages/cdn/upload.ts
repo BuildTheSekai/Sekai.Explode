@@ -43,9 +43,8 @@ export default {
 		);
 
 		try {
-			const res = await axios.get(file.proxyURL, {
-				responseType: 'stream',
-			});
+			const res = await fetch(file.url);
+			const resData = await res.arrayBuffer();
 			const form = new FormData();
 			const filename = interaction.options.getString(
 				LANG.commands.upload.options.filename.name,
@@ -55,7 +54,7 @@ export default {
 					LANG.commands.upload.options.private.name,
 				) == true;
 			console.log(strFormat(LANG.commands.upload.isPrivateLog, [isPrivate]));
-			form.append('file', res.data, filename || file.name);
+			form.append('file', Buffer.from(resData), filename || file.name);
 			const res2 = await axios.post(config.cdnUploadURL, form, {
 				params: {
 					private: isPrivate,
