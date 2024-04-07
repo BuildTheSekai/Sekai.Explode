@@ -40,13 +40,6 @@ const options = {
 	// ws: { properties: { $browser: "Discord iOS" }}
 };
 
-console.log(
-	cgreen +
-		strFormat(LANG.discordbot.main.commandsLoaded, [
-			CommandManager.default.size,
-		]) +
-		creset,
-);
 const client = new Client(options);
 console.log(LANG.discordbot.main.setupActivityCalling);
 activity.setupActivity(client);
@@ -62,6 +55,14 @@ const featuresLoadPromise = fs
 					console.log(module);
 					throw new TypeError(`${file} feature is undefined`);
 				}
+				return feature;
+			}),
+		),
+	)
+	.then((features) => features.filter((feature) => feature.enabled))
+	.then((features) =>
+		Promise.all(
+			features.map(async (feature) => {
 				await feature.load(client);
 				return feature;
 			}),
@@ -92,6 +93,13 @@ client.on('ready', async (readyClient) => {
 	});
 	console.log(LANG.discordbot.ready.commandsRegistering);
 	await CommandManager.default.setClient(readyClient);
+	console.log(
+		cgreen +
+			strFormat(LANG.discordbot.main.commandsLoaded, [
+				CommandManager.default.size,
+			]) +
+			creset,
+	);
 	console.log(
 		strFormat(LANG.discordbot.ready.readyAndTime, {
 			ready: cgreen + LANG.discordbot.ready.commandsReady + creset,

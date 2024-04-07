@@ -30,6 +30,16 @@ const lokiJSConfigSchema = z.object({
 const configSchema = z
 	.object({
 		token: z.string(),
+		features: z
+			.object({
+				admin: z.boolean().optional(),
+				cdn: z.boolean().optional(),
+				misc: z.boolean().optional(),
+				player: z.boolean().optional(),
+				templink: z.boolean().optional(),
+				'web-api': z.boolean().optional(),
+			})
+			.optional(),
 		cdnUploadURL: z.string(),
 		cdnRootURL: z.string(),
 		uploadAllowUsers: z.array(z.string()).optional(),
