@@ -118,7 +118,7 @@ function unicodeEscape(str) {
  */
 function linkHandler(req, res) {
 	const remoteIp = req.headers['cf-connecting-ip'];
-	const logPath = path.join(__dirname, 'accesslog.txt');
+	const logPath = path.join(__dirname, '../', '../', 'accesslog.txt');
 	if (!fs.existsSync(logPath))
 		fs.writeFileSync(logPath, 'Access Log================\n');
 	fs.appendFileSync(logPath, `IP: ${remoteIp} | ${req.originalUrl}\n`);

@@ -136,3 +136,6 @@ dist
 
 # LokiJS database file
 database.json
+
+# Templink access log
+accesslog.txt
