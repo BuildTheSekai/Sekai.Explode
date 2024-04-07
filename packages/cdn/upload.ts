@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 const axios = require('axios').default;
 const FormData = require('form-data');
 const config = require('../../config.json');
 const { LANG, strFormat } = require('../../util/languages');
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName(LANG.commands.upload.name)
 		.setDescription(LANG.commands.upload.description)
@@ -25,10 +25,7 @@ module.exports = {
 				.setDescription(LANG.commands.upload.options.private.description)
 				.setRequired(false),
 		),
-	execute: async function (
-		/** @type {import('discord.js').CommandInteraction} */
-		interaction,
-	) {
+	execute: async function (interaction: ChatInputCommandInteraction) {
 		if (!config.cdnUploadURL || !config.uploadAllowUsers) {
 			await interaction.reply(LANG.commands.upload.internalError);
 			return;
