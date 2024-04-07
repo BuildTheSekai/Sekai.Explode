@@ -1,6 +1,14 @@
 {
 	"kairun": 8264,
 	"token": "YourDiscordBotTokenHere",
+	"features": {
+		"admin": true,
+		"cdn": true,
+		"misc": true,
+		"player": true,
+		"templink": true,
+		"web-api": true
+	},
 	"tempLinkSrvToken": "Tl0_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 	"tempLinkSrvPostURL": "https://link.example.com/api/links",
 	"linkDomain": "link.yourdomain.com",

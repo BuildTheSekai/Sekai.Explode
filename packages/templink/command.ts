@@ -1,13 +1,13 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { LANG, strFormat } = require('../../util/languages');
-const {
+import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { LANG, strFormat } from '../../util/languages';
+import {
 	areTempLinksEnabled,
 	createTempLink,
 	InvalidURLError,
-} = require('./templinks');
-const { AxiosError } = require('axios');
+} from './templinks';
+import { AxiosError } from 'axios';
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName(LANG.commands.templink.name)
 		.setDescription(LANG.commands.templink.description)
@@ -17,19 +17,17 @@ module.exports = {
 				.setDescription(LANG.commands.templink.options.url.description)
 				.setRequired(true),
 		),
-	execute: async function (
-		/** @type {import("discord.js").CommandInteraction} */ interaction,
-	) {
+	execute: async function (interaction: CommandInteraction) {
 		if (!areTempLinksEnabled()) {
-			return interaction.reply(LANG.commands.templink.internalError);
+			await interaction.reply(LANG.commands.templink.internalError);
+			return;
 		}
-		const url = interaction.options.get(
-			LANG.commands.templink.options.url.name,
-		).value;
+		const url = interaction.options.get(LANG.commands.templink.options.url.name)
+			.value as string;
 		try {
 			const { id, link } = await createTempLink(url, 1000 * 300);
 			console.log(strFormat(LANG.commands.templink.linkCreated, { id, url }));
-			interaction.reply({
+			await interaction.reply({
 				content: null,
 				embeds: [
 					{
