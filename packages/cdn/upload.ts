@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-const axios = require('axios').default;
-const FormData = require('form-data');
-const config = require('../../config.json');
-const { LANG, strFormat } = require('../../util/languages');
+import axios from 'axios';
+import FormData from 'form-data';
+import config from '../../internal/config';
+import { LANG, strFormat } from '../../util/languages';
 
 export default {
 	data: new SlashCommandBuilder()
@@ -47,12 +47,13 @@ export default {
 				responseType: 'stream',
 			});
 			const form = new FormData();
-			const filename = interaction.options.get(
+			const filename = interaction.options.getString(
 				LANG.commands.upload.options.filename.name,
-			)?.value;
+			);
 			const isPrivate =
-				interaction.options.get(LANG.commands.upload.options.private.name)
-					?.value == true;
+				interaction.options.getBoolean(
+					LANG.commands.upload.options.private.name,
+				) == true;
 			console.log(strFormat(LANG.commands.upload.isPrivateLog, [isPrivate]));
 			form.append('file', res.data, filename || file.name);
 			const res2 = await axios.post(config.cdnUploadURL, form, {
