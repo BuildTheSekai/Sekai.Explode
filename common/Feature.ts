@@ -8,6 +8,8 @@ export abstract class Feature {
 
 	private unloading = false;
 
+	enabled: boolean;
+
 	async load(client: Client<boolean>) {
 		if (!this.loading) {
 			this.loading = true;
