@@ -3,7 +3,7 @@ import {
 	ApplicationCommandOptionWithChoicesAndAutocompleteMixin,
 	CacheType,
 	SharedSlashCommandOptions,
-	SlashCommandBuilder,
+	SlashCommandSubcommandBuilder,
 } from 'discord.js';
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Command } from '../util/types';
@@ -12,7 +12,7 @@ type Value<T, Required extends boolean = boolean> = Required extends true
 	? T
 	: T | undefined;
 
-type OptionValueMap<O extends Option<unknown>[]> = {
+export type OptionValueMap<O extends Option<unknown>[]> = {
 	[I in keyof O]: O[I] extends Option<infer T, infer Required>
 		? Value<T, Required>
 		: never;
@@ -50,7 +50,7 @@ interface SimpleStringOptionData<
 	min_length?: number;
 }
 
-interface Option<T = unknown, Required extends boolean = boolean> {
+export interface Option<T = unknown, Required extends boolean = boolean> {
 	/** オプションの名前 */
 	name: string;
 
@@ -163,23 +163,23 @@ class StringOption<
 export class SimpleSlashCommandBuilder<
 	Options extends Option<unknown, boolean>[] = [],
 > {
-	#name: string;
+	public readonly name: string;
 
 	#description: string;
 
-	handle: SlashCommandBuilder;
+	handle: SlashCommandSubcommandBuilder;
 
 	options: Options;
 
 	constructor(
 		name: string,
 		description: string,
-		handle: SlashCommandBuilder,
+		handle: SlashCommandSubcommandBuilder,
 		options: Options,
 	) {
 		handle.setName(name);
 		handle.setDescription(description);
-		this.#name = name;
+		this.name = name;
 		this.#description = description;
 		this.handle = handle;
 		this.options = options;
@@ -196,7 +196,7 @@ export class SimpleSlashCommandBuilder<
 		return new SimpleSlashCommandBuilder(
 			name,
 			description,
-			new SlashCommandBuilder(),
+			new SlashCommandSubcommandBuilder(),
 			[],
 		);
 	}
@@ -208,7 +208,7 @@ export class SimpleSlashCommandBuilder<
 			option,
 		];
 		return new SimpleSlashCommandBuilder(
-			this.#name,
+			this.name,
 			this.#description,
 			this.handle,
 			options,
