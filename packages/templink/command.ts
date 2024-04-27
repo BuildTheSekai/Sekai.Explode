@@ -22,13 +22,15 @@ export default {
 			await interaction.reply(LANG.commands.templink.internalError);
 			return;
 		}
-		const url = interaction.options.get(LANG.commands.templink.options.url.name)
-			.value as string;
+		const url = interaction.options.get(
+			LANG.commands.templink.options.url.name,
+			true,
+		).value as string;
 		try {
 			const { id, link } = await createTempLink(url, 1000 * 300);
 			console.log(strFormat(LANG.commands.templink.linkCreated, { id, url }));
 			await interaction.reply({
-				content: null,
+				content: undefined,
 				embeds: [
 					{
 						title: LANG.commands.templink.result.title,

@@ -87,9 +87,10 @@ export class MonthCalendar {
 		if (year == null) {
 			const date = new Date();
 			year = date.getFullYear();
-			if (monthIndex == null) {
-				monthIndex = date.getMonth();
-			}
+		}
+		if (monthIndex == null) {
+			const date = new Date();
+			monthIndex = date.getMonth();
 		}
 		this.month = monthIndex;
 		this.year = year;

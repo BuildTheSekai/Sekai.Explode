@@ -8,7 +8,7 @@ export abstract class Feature {
 
 	private unloading = false;
 
-	enabled: boolean;
+	abstract enabled: boolean;
 
 	async load(client: Client<boolean>) {
 		if (!this.loading) {
@@ -38,7 +38,7 @@ export abstract class Feature {
 		}
 	}
 
-	name: string;
+	abstract name: string;
 
 	/**
 	 * この機能の依存先の機能

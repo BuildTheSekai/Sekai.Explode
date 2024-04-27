@@ -88,7 +88,7 @@ export class SimpleSubcommandBuilder<
 		) => Promise<void>,
 	): SimpleCommand<Options> {
 		const subcommand = super.build(action);
-		this.#onBuild(this.name, subcommand);
+		this.#onBuild(this.name, subcommand as any);
 		return subcommand;
 	}
 }

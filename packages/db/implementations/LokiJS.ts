@@ -25,9 +25,9 @@ export class LokiJSWrapper implements Connection {
 		const handle = this.handle;
 		const collection = handle.getCollection(name);
 		if (collection != null) {
-			return new CollectionWrapper(collection);
+			return new CollectionWrapper<T>(collection);
 		}
-		return new CollectionWrapper(handle.addCollection(name));
+		return new CollectionWrapper<T>(handle.addCollection(name));
 	}
 
 	close(): Promise<void> {
@@ -56,7 +56,7 @@ class CollectionWrapper<T extends Document> implements ICollection<T> {
 		this.handle = handle;
 	}
 
-	findOne(query: Query<T>): Promise<T> {
+	findOne(query: Query<T>): Promise<T | null> {
 		return promise(() => this.handle.findOne(query));
 	}
 

@@ -78,10 +78,10 @@ client.on('ready', async (readyClient) => {
 		strFormat(LANG.discordbot.ready.loggedIn, {
 			cgreen,
 			creset,
-			tag: client.user.tag,
+			tag: readyClient.user.tag,
 		}),
 	);
-	client.user.setPresence({
+	readyClient.user.setPresence({
 		activities: [
 			{
 				name: LANG.discordbot.ready.presenceNameLoading,
@@ -107,13 +107,13 @@ client.on('ready', async (readyClient) => {
 		}),
 	);
 	const SyslogChannel = client.channels.cache.get(syslogChannel);
-	assert(SyslogChannel.isTextBased());
+	assert(SyslogChannel?.isTextBased());
 	SyslogChannel.send(LANG.discordbot.ready.sysLog);
 });
 
 onShutdown(async () => {
 	const SyslogChannel = client.channels.cache.get(syslogChannel);
-	assert(SyslogChannel.isTextBased());
+	assert(SyslogChannel?.isTextBased());
 	await SyslogChannel.send(LANG.discordbot.shutdown.sysLog);
 	const features = await featuresLoadPromise;
 	await Promise.all(features.map((feature) => feature.unload()));
