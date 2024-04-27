@@ -201,18 +201,22 @@ export class SimpleSlashCommandBuilder<
 		);
 	}
 
+	protected newInstance<O extends Option<unknown, boolean>[]>(
+		name: string,
+		description: string,
+		handle: SlashCommandSubcommandBuilder,
+		options: O,
+	): SimpleSlashCommandBuilder<O> {
+		return new SimpleSlashCommandBuilder(name, description, handle, options);
+	}
+
 	addOption<T, Required extends boolean = false>(option: Option<T, Required>) {
 		/** @type {[...Options, Option<T, Required>]} */
 		const options: [...Options, Option<T, Required>] = [
 			...this.options,
 			option,
 		];
-		return new SimpleSlashCommandBuilder(
-			this.name,
-			this.#description,
-			this.handle,
-			options,
-		);
+		return this.newInstance(this.name, this.#description, this.handle, options);
 	}
 
 	addIntegerOption<T extends number, Required extends boolean = boolean>(

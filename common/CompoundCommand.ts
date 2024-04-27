@@ -47,20 +47,41 @@ export class CompoundCommandBuilder {
 export class SimpleSubcommandBuilder<
 	Options extends Option<unknown, boolean>[] = [],
 > extends SimpleSlashCommandBuilder<Options> {
-	readonly #onBuild: (name: string, subcommand: SimpleCommand<Options>) => void;
+	readonly #onBuild: (
+		name: string,
+		subcommand: SimpleCommand<Option<unknown, boolean>[]>,
+	) => void;
 
 	constructor(
 		name: string,
 		description: string,
 		handle: SlashCommandSubcommandBuilder,
 		options: Options,
-		onBuild: (name: string, subcommand: SimpleCommand<Options>) => void,
+		onBuild: (
+			name: string,
+			subcommand: SimpleCommand<Option<unknown, boolean>[]>,
+		) => void,
 	) {
 		super(name, description, handle, options);
 		this.#onBuild = onBuild;
 	}
 
-	build(
+	protected override newInstance<O extends Option<unknown, boolean>[]>(
+		name: string,
+		description: string,
+		handle: SlashCommandSubcommandBuilder,
+		options: O,
+	): SimpleSlashCommandBuilder<O> {
+		return new SimpleSubcommandBuilder(
+			name,
+			description,
+			handle,
+			options,
+			this.#onBuild,
+		);
+	}
+
+	override build(
 		action: (
 			interaction: ChatInputCommandInteraction<CacheType>,
 			...options: OptionValueMap<Options>
