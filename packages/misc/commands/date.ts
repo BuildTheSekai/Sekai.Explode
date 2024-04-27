@@ -1,9 +1,12 @@
 import { CompoundCommandBuilder } from '../../../common/CompoundCommand';
+import { Day } from '../util/calendar';
 
 const builder = new CompoundCommandBuilder('date', '時刻の計算と表示');
 
-builder.subcommand('now', '現在時刻を表示').build(async (i) => {
-	await i.reply(new Date().toString());
+builder.subcommand('now', '現在時刻を表示').build(async (interaction) => {
+	const date = new Date();
+	const day = new Day(date.getFullYear(), date.getMonth(), date.getDate());
+	await interaction.reply(day.toHumanReadable());
 });
 
 builder

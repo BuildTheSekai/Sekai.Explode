@@ -114,7 +114,32 @@
 		},
 		"defaultValues": {
 			"graphLabel": "value"
-		}
+		},
+		"dayNames": [
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday"
+		],
+		"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+		"monthNames": [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December"
+		],
+		"dateFormat": "${day}, ${month} ${date}, ${year}"
 	},
 	"commands": {
 		"cal": {
