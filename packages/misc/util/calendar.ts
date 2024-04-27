@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { LANG, strFormat } from '../../../util/languages';
 
 export const DayOfWeek = Object.freeze({
 	Sunday: 0,
@@ -64,8 +65,21 @@ export class Day {
 		return `${this.year}/${this.month + 1}/${this.date}`;
 	}
 
+	toHumanReadable() {
+		return strFormat(LANG.common.dateFormat, {
+			year: this.year,
+			month: LANG.common.monthNames[this.month],
+			date: this.date,
+			day: LANG.common.dayNames[this.day],
+		});
+	}
+
 	isHoliday() {
 		return holidays.has(this.toString());
+	}
+
+	holiday(): string | null {
+		return holidays.get(this.toString()) ?? null;
 	}
 }
 
