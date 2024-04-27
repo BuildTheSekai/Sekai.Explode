@@ -10,6 +10,8 @@ import { LokiJSWrapper } from './implementations/LokiJS';
 export * from './types';
 
 class DbFeature extends Feature {
+	enabled = true;
+
 	name = 'db';
 
 	connection: Connection;
