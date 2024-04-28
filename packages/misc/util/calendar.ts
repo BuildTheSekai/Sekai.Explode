@@ -86,6 +86,87 @@ export class CalendarDate {
 	holiday(): string | null {
 		return holidays.get(this.toString()) ?? null;
 	}
+
+	compare(other: CalendarDate): -1 | 0 | 1 {
+		if (this.year < other.year) {
+			return -1;
+		} else if (this.year > other.year) {
+			return 1;
+		}
+		// assert this.year == other.year
+
+		if (this.month < other.month) {
+			return -1;
+		} else if (this.month > other.month) {
+			return 1;
+		}
+		// assert this.month == other.month
+
+		if (this.date < other.date) {
+			return -1;
+		} else if (this.date > other.date) {
+			return 1;
+		}
+		// assert this.date == other.date
+
+		return 0;
+	}
+
+	asDate(): Date {
+		return new Date(this.year, this.month, this.date);
+	}
+
+	/**
+	 * 一年の初めからの日数を計算する。
+	 */
+	getDayOfYear(): number {
+		const start = new Date(this.year, 0, 0); // 前年の大晦日
+		return dayDiff(this.asDate(), start);
+	}
+
+	/**
+	 * 一年が終わるまでの日数を計算する。
+	 */
+	getRestDayOfYear(): number {
+		const end = new Date(this.year + 1, 0, 0); // 大晦日
+		return dayDiff(end, this.asDate());
+	}
+
+	diff(other: CalendarDate): { years: number; days: number } {
+		let date1: CalendarDate = this;
+		let date2: CalendarDate = other;
+		if (date1.compare(date2) < 0) {
+			const temp = date1;
+			date1 = date2;
+			date2 = temp;
+		}
+		const years = date1.year - date2.year;
+		const dayOfYear = date1.getDayOfYear();
+		const days = dayOfYear - date2.getDayOfYear();
+		if (days >= 0) {
+			return { years, days };
+		} else {
+			return {
+				years: years - 1,
+				days: dayOfYear + date2.getRestDayOfYear(),
+			};
+		}
+	}
+
+	static today(): CalendarDate {
+		const date = new Date();
+		return new CalendarDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate(),
+		);
+	}
+}
+
+function dayDiff(date1: Date, date2: Date): number {
+	return Math.floor(
+		(date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24),
+	);
 }
 
 export type Week = { [K in DayOfWeek]: CalendarDate } & Array<CalendarDate>;

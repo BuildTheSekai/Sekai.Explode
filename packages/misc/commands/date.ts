@@ -51,12 +51,14 @@ builder
 			});
 			return;
 		}
-		const date = new Date(
+		const today = CalendarDate.today();
+		const date = new CalendarDate(
 			Number.parseInt(match[1]),
 			Number.parseInt(match[2]) - 1,
 			Number.parseInt(match[3]),
 		);
-		interaction.reply(`${date.getTime() - Date.now()}秒後`);
+		const { years, days } = today.diff(date);
+		interaction.reply(strFormat(LANG.common.yearsDaysFormat, { years, days }));
 	});
 
 export default builder.build();
