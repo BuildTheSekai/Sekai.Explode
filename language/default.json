@@ -145,7 +145,8 @@
 			"no": ""
 		},
 		"timeFormat": "${hour}:${minute}:${second}",
-		"dateTimeFormat": "${date} ${time}"
+		"dateTimeFormat": "${date} ${time}",
+		"yearsDaysFormat": "${years}年と${days}日"
 	},
 	"commands": {
 		"cal": {

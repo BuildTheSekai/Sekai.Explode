@@ -139,7 +139,14 @@
 			"November",
 			"December"
 		],
-		"dateFormat": "${day}, ${month} ${date}, ${year}"
+		"dateFormat": "${day}, ${month} ${date}, ${year}${holiday}",
+		"holiday": {
+			"yes": " (${0})",
+			"no": ""
+		},
+		"timeFormat": "${hour}:${minute}:${second}",
+		"dateTimeFormat": "${time} at ${date}",
+		"yearsDaysFormat": "${years} year(s) and ${days} day(s)"
 	},
 	"commands": {
 		"cal": {
