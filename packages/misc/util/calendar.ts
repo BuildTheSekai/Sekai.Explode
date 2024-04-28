@@ -32,7 +32,7 @@ async function getHolidays() {
 }
 getHolidays();
 
-export class Day {
+export class CalendarDate {
 	public readonly year: number;
 
 	public readonly month: number;
@@ -50,7 +50,7 @@ export class Day {
 	}
 
 	add(days: number) {
-		return new Day(this.year, this.month, this.date + days);
+		return new CalendarDate(this.year, this.month, this.date + days);
 	}
 
 	is(date: Date): boolean {
@@ -88,7 +88,7 @@ export class Day {
 	}
 }
 
-export type Week = { [K in DayOfWeek]: Day } & Array<Day>;
+export type Week = { [K in DayOfWeek]: CalendarDate } & Array<CalendarDate>;
 
 export class MonthCalendar {
 	public readonly month: number;
@@ -117,10 +117,10 @@ export class MonthCalendar {
 	}
 
 	firstDay() {
-		return new Day(this.year, this.month, 1);
+		return new CalendarDate(this.year, this.month, 1);
 	}
 
-	includes(day: Day) {
+	includes(day: CalendarDate) {
 		if (day.year == this.year && day.month == this.month) {
 			return true;
 		}
