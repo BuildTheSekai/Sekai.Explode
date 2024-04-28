@@ -1,6 +1,6 @@
 import { CompoundCommandBuilder } from '../../../common/CompoundCommand';
 import { LANG, strFormat } from '../../../util/languages';
-import { Day } from '../util/calendar';
+import { CalendarDate } from '../util/calendar';
 
 const builder = new CompoundCommandBuilder(
 	LANG.commands.date.name,
@@ -14,7 +14,11 @@ builder
 	)
 	.build(async (interaction) => {
 		const date = new Date();
-		const day = new Day(date.getFullYear(), date.getMonth(), date.getDate());
+		const day = new CalendarDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate(),
+		);
 		const time = strFormat(LANG.common.timeFormat, {
 			hour: date.getHours().toString().padStart(2, '0'),
 			minute: date.getMinutes().toString().padStart(2, '0'),
