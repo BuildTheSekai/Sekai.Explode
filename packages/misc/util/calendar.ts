@@ -66,11 +66,16 @@ export class Day {
 	}
 
 	toHumanReadable() {
+		const holiday = this.holiday();
 		return strFormat(LANG.common.dateFormat, {
 			year: this.year,
 			month: LANG.common.monthNames[this.month],
 			date: this.date,
 			day: LANG.common.dayNames[this.day],
+			holiday:
+				holiday != null
+					? strFormat(LANG.common.holiday.yes, [holiday])
+					: LANG.common.holiday.no,
 		});
 	}
 
