@@ -146,7 +146,8 @@
 		},
 		"timeFormat": "${hour}:${minute}:${second}",
 		"dateTimeFormat": "${date} ${time}",
-		"yearsDaysFormat": "${years}年と${days}日"
+		"yearsDaysAgo": "${years}年と${days}日前",
+		"yearsDaysLater": "${years}年と${days}日後"
 	},
 	"commands": {
 		"cal": {

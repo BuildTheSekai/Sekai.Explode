@@ -146,7 +146,8 @@
 		},
 		"timeFormat": "${hour}:${minute}:${second}",
 		"dateTimeFormat": "${time} at ${date}",
-		"yearsDaysFormat": "${years} year(s) and ${days} day(s)"
+		"yearsDaysAgo": "${years} year(s) and ${days} day(s) ago",
+		"yearsDaysLater": "${years} year(s) and ${days} day(s) later"
 	},
 	"commands": {
 		"cal": {
