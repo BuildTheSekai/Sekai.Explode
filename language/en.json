@@ -201,6 +201,27 @@
 			},
 			"invalidUrlError": "The URL is invalid"
 		},
+		"date": {
+			"name": "date",
+			"description": "Gets dates",
+			"subcommands": {
+				"now": {
+					"name": "now",
+					"description": "Shows the current time"
+				},
+				"diff": {
+					"name": "diff",
+					"description": "Calculates the difference of today and another date",
+					"options": {
+						"date": {
+							"name": "date",
+							"description": "A date in yyyy/MM/dd"
+						}
+					},
+					"invalidDate": "Invalid date format"
+				}
+			}
+		},
 		"discordinfo": {
 			"name": "info",
 			"description": "Lookup Server/User Info",

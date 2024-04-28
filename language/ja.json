@@ -201,6 +201,27 @@
 			},
 			"invalidUrlError": "URLが間違っています"
 		},
+		"date": {
+			"name": "date",
+			"description": "日付の計算と表示",
+			"subcommands": {
+				"now": {
+					"name": "now",
+					"description": "現在時刻を表示"
+				},
+				"diff": {
+					"name": "diff",
+					"description": "今日との日付の差を計算",
+					"options": {
+						"date": {
+							"name": "date",
+							"description": "yyyy/MM/dd形式の日付"
+						}
+					},
+					"invalidDate": "日付の形式が無効です"
+				}
+			}
+		},
 		"discordinfo": {
 			"name": "info",
 			"description": "サーバーまたはユーザーの情報を調べます",
