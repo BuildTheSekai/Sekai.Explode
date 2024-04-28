@@ -1,19 +1,31 @@
 import { CompoundCommandBuilder } from '../../../common/CompoundCommand';
+import { LANG } from '../../../util/languages';
 import { Day } from '../util/calendar';
 
-const builder = new CompoundCommandBuilder('date', '時刻の計算と表示');
-
-builder.subcommand('now', '現在時刻を表示').build(async (interaction) => {
-	const date = new Date();
-	const day = new Day(date.getFullYear(), date.getMonth(), date.getDate());
-	await interaction.reply(day.toHumanReadable());
-});
+const builder = new CompoundCommandBuilder(
+	LANG.commands.date.name,
+	LANG.commands.date.description,
+);
 
 builder
-	.subcommand('diff', '時刻の差を計算')
+	.subcommand(
+		LANG.commands.date.subcommands.now.name,
+		LANG.commands.date.subcommands.now.description,
+	)
+	.build(async (interaction) => {
+		const date = new Date();
+		const day = new Day(date.getFullYear(), date.getMonth(), date.getDate());
+		await interaction.reply(day.toHumanReadable());
+	});
+
+builder
+	.subcommand(
+		LANG.commands.date.subcommands.diff.name,
+		LANG.commands.date.subcommands.diff.description,
+	)
 	.addStringOption({
-		name: 'date',
-		description: '時刻',
+		name: LANG.commands.date.subcommands.diff.options.date.name,
+		description: LANG.commands.date.subcommands.diff.options.date.description,
 		required: true,
 	})
 	.build(async (interaction, dateString) => {
@@ -21,7 +33,7 @@ builder
 		if (match == null) {
 			await interaction.reply({
 				ephemeral: true,
-				content: '日付の形式が無効です',
+				content: LANG.commands.date.subcommands.diff.invalidDate,
 			});
 			return;
 		}
