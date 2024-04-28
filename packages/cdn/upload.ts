@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
-const axios = require('axios').default;
-const FormData = require('form-data');
-const config = require('../../config.json');
-const { LANG, strFormat } = require('../../util/languages');
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import axios from 'axios';
+import FormData from 'form-data';
+import config from '../../internal/config';
+import { LANG, strFormat } from '../../util/languages';
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName(LANG.commands.upload.name)
 		.setDescription(LANG.commands.upload.description)
@@ -25,10 +25,7 @@ module.exports = {
 				.setDescription(LANG.commands.upload.options.private.description)
 				.setRequired(false),
 		),
-	execute: async function (
-		/** @type {import('discord.js').CommandInteraction} */
-		interaction,
-	) {
+	execute: async function (interaction: ChatInputCommandInteraction) {
 		if (!config.cdnUploadURL || !config.uploadAllowUsers) {
 			await interaction.reply(LANG.commands.upload.internalError);
 			return;
@@ -43,21 +40,21 @@ module.exports = {
 		await interaction.deferReply();
 		const file = interaction.options.getAttachment(
 			LANG.commands.upload.options.file.name,
-		);
+		)!;
 
 		try {
-			const res = await axios.get(file.proxyURL, {
-				responseType: 'stream',
-			});
+			const res = await fetch(file.url);
+			const resData = await res.arrayBuffer();
 			const form = new FormData();
-			const filename = interaction.options.get(
+			const filename = interaction.options.getString(
 				LANG.commands.upload.options.filename.name,
-			)?.value;
+			);
 			const isPrivate =
-				interaction.options.get(LANG.commands.upload.options.private.name)
-					?.value == true;
+				interaction.options.getBoolean(
+					LANG.commands.upload.options.private.name,
+				) == true;
 			console.log(strFormat(LANG.commands.upload.isPrivateLog, [isPrivate]));
-			form.append('file', res.data, filename || file.name);
+			form.append('file', Buffer.from(resData), filename || file.name);
 			const res2 = await axios.post(config.cdnUploadURL, form, {
 				params: {
 					private: isPrivate,
@@ -114,7 +111,7 @@ module.exports = {
 			} catch (e) {
 				console.error(e);
 			}
-		} catch (e) {
+		} catch (e: any) {
 			if (e?.name == 'AxiosError' && e?.response?.status) {
 				await interaction.editReply({
 					embeds: [

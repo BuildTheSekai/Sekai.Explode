@@ -256,7 +256,7 @@ async function replyAlternativeUrl(message: Message): Promise<void> {
 				const sentMsg = await message.channel.send(fxMsg);
 				try {
 					await message.reactions.removeAll();
-				} catch (e) {
+				} catch (e: any) {
 					// リアクション削除時のエラー
 					console.error(
 						strFormat(
@@ -271,7 +271,7 @@ async function replyAlternativeUrl(message: Message): Promise<void> {
 						]);
 					await sentMsg.edit(`${fxMsg}${errMsg}`);
 				}
-			} catch (error) {
+			} catch (error: any) {
 				// リダイレクト URL 取得時のエラー
 				const errorMessage = `${LANG.discordbot.getRedirectUrl.error} ${error.message}`;
 				await message.channel.send(
@@ -355,7 +355,7 @@ async function getRedirectUrl(shortUrl: string) {
 		const redirectUrl = response.headers.location;
 		console.log(LANG.discordbot.getRedirectUrl.redirectURL, redirectUrl);
 		return redirectUrl as string;
-	} catch (error) {
+	} catch (error: any) {
 		console.error(LANG.discordbot.getRedirectUrl.error, error.message);
 		throw error;
 	}

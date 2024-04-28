@@ -12,7 +12,6 @@
 		"colors": "^1.4.0",
 		"discord-player": "^6.6.8",
 		"discord.js": "^14.14.1",
-		"express": "^4.18.3",
 		"form-data": "^4.0.0",
 		"fs": "^0.0.2",
 		"ip-range-check": "^0.2.0",
@@ -44,7 +43,8 @@
 		"start": "npx tsx .",
 		"test": "jest",
 		"prepare": "husky",
-		"check": "npx tsc --noemit"
+		"check": "npx tsc --noemit",
+		"dev": "npx tsx watch --ignore accesslog.txt --ignore discordbot.log ."
 	},
 	"workspaces": [
 		"packages/*"
