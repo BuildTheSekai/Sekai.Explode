@@ -132,10 +132,15 @@ export class CalendarDate {
 		return dayDiff(end, this.asDate());
 	}
 
-	diff(other: CalendarDate): { years: number; days: number } {
+	diff(other: CalendarDate): {
+		years: number;
+		days: number;
+		comparison: -1 | 0 | 1;
+	} {
 		let date1: CalendarDate = this;
 		let date2: CalendarDate = other;
-		if (date1.compare(date2) < 0) {
+		const comparison = date1.compare(date2);
+		if (comparison < 0) {
 			const temp = date1;
 			date1 = date2;
 			date2 = temp;
@@ -144,11 +149,12 @@ export class CalendarDate {
 		const dayOfYear = date1.getDayOfYear();
 		const days = dayOfYear - date2.getDayOfYear();
 		if (days >= 0) {
-			return { years, days };
+			return { years, days, comparison };
 		} else {
 			return {
 				years: years - 1,
 				days: dayOfYear + date2.getRestDayOfYear(),
+				comparison,
 			};
 		}
 	}

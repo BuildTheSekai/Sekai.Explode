@@ -57,8 +57,13 @@ builder
 			Number.parseInt(match[2]) - 1,
 			Number.parseInt(match[3]),
 		);
-		const { years, days } = today.diff(date);
-		interaction.reply(strFormat(LANG.common.yearsDaysFormat, { years, days }));
+		const { years, days, comparison } = today.diff(date);
+		interaction.reply(
+			strFormat(
+				comparison >= 0 ? LANG.common.yearsDaysAgo : LANG.common.yearsDaysLater,
+				{ years, days },
+			),
+		);
 	});
 
 export default builder.build();
