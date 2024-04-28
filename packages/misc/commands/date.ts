@@ -1,5 +1,5 @@
 import { CompoundCommandBuilder } from '../../../common/CompoundCommand';
-import { LANG } from '../../../util/languages';
+import { LANG, strFormat } from '../../../util/languages';
 import { Day } from '../util/calendar';
 
 const builder = new CompoundCommandBuilder(
@@ -15,7 +15,17 @@ builder
 	.build(async (interaction) => {
 		const date = new Date();
 		const day = new Day(date.getFullYear(), date.getMonth(), date.getDate());
-		await interaction.reply(day.toHumanReadable());
+		const time = strFormat(LANG.common.timeFormat, {
+			hour: date.getHours().toString().padStart(2, '0'),
+			minute: date.getMinutes().toString().padStart(2, '0'),
+			second: date.getSeconds().toString().padStart(2, '0'),
+		});
+		await interaction.reply(
+			strFormat(LANG.common.dateTimeFormat, {
+				date: day.toHumanReadable(),
+				time: time,
+			}),
+		);
 	});
 
 builder

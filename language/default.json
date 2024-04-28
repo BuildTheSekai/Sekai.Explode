@@ -139,7 +139,13 @@
 			"11月",
 			"12月"
 		],
-		"dateFormat": "${year}年${month}${date}日${day}"
+		"dateFormat": "${year}年${month}${date}日${day}${holiday}",
+		"holiday": {
+			"yes": " (${0})",
+			"no": ""
+		},
+		"timeFormat": "${hour}:${minute}:${second}",
+		"dateTimeFormat": "${date} ${time}"
 	},
 	"commands": {
 		"cal": {
