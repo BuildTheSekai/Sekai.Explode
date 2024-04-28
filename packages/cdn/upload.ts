@@ -40,7 +40,7 @@ export default {
 		await interaction.deferReply();
 		const file = interaction.options.getAttachment(
 			LANG.commands.upload.options.file.name,
-		);
+		)!;
 
 		try {
 			const res = await fetch(file.url);
@@ -111,7 +111,7 @@ export default {
 			} catch (e) {
 				console.error(e);
 			}
-		} catch (e) {
+		} catch (e: any) {
 			if (e?.name == 'AxiosError' && e?.response?.status) {
 				await interaction.editReply({
 					embeds: [

@@ -276,7 +276,7 @@ module.exports = {
 										.join('\n') +
 									'\n```';
 							}
-						} catch (e) {
+						} catch (e: any) {
 							if (e.code == 'ENOTFOUND') {
 								throw new Error(
 									LANG.commands.nettool.subcommands.nsLookup.domainDoesNotExist,
@@ -307,7 +307,7 @@ module.exports = {
 						},
 					],
 				});
-			} catch (e) {
+			} catch (e: any) {
 				await interaction.editReply({
 					embeds: [
 						{

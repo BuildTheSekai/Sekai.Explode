@@ -27,16 +27,14 @@ export function teeWrite(
 		const withBufferEncoding = typeof option1 == 'string';
 		const cb = withBufferEncoding ? option2 : option1;
 		const fileWritePromise = fs.appendFile(logFilename, data ?? '');
-		async function wrappedCallback(err: Error) {
+		function wrappedCallback(err: Error | undefined) {
 			if (err) {
-				return cb(err);
+				return cb?.(err);
 			} else {
-				try {
-					await fileWritePromise;
-				} catch (e) {
-					cb(err);
-				}
-				cb();
+				fileWritePromise.then(
+					() => cb?.(),
+					(e) => cb?.(err),
+				);
 			}
 		}
 		if (withBufferEncoding) {
