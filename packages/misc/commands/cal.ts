@@ -37,7 +37,7 @@ export default SimpleSlashCommandBuilder.create(
 		name: LANG.commands.cal.options.month.name,
 		description: LANG.commands.cal.options.month.description,
 		choices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((value) => ({
-			name: LANG.commands.cal.monthNames[value],
+			name: LANG.common.monthNames[value],
 			value,
 		})),
 		required: false,
@@ -51,7 +51,7 @@ export default SimpleSlashCommandBuilder.create(
 		name: LANG.commands.cal.options.weekStart.name,
 		description: LANG.commands.cal.options.weekStart.description,
 		choices: Object.values(DayOfWeek).map((value) => ({
-			name: LANG.commands.cal.dayNames[value],
+			name: LANG.common.dayNames[value],
 			value,
 		})),
 		required: false,
@@ -69,7 +69,7 @@ export default SimpleSlashCommandBuilder.create(
 		let todayIndex;
 		const table = [
 			days.map((i) => {
-				const text = new InlineText(LANG.commands.cal.dayLabels[i]);
+				const text = new InlineText(LANG.common.dayLabels[i]);
 				text.color = dayColor(i as DayOfWeek);
 				return text;
 			}),
@@ -96,7 +96,7 @@ export default SimpleSlashCommandBuilder.create(
 		const ctx = canvas.getContext('2d');
 		new BoundingBox(0, 0, 800, 400).fill(ctx, 'white');
 		const title = strFormat(LANG.commands.cal.monthYear, {
-			month: LANG.commands.cal.monthNames[calendar.month],
+			month: LANG.common.monthNames[calendar.month],
 			year: calendar.year,
 		});
 		const titleStyle = new InlineText(title);

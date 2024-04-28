@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import { Collection, Connection, Cursor, Document, Query } from '../types';
 
-type FindCursor<T> = ReturnType<typeof mongoose.Collection.find<T>>;
+type FindCursor<T extends Document> = ReturnType<
+	typeof mongoose.Collection.find<T>
+>;
 
 export class MongoDBWrapper implements Connection {
 	private readonly handle: mongoose.Connection;

@@ -123,7 +123,7 @@ export class CanvasTextBox {
 export class CanvasTable {
 	public cells: CanvasTextBox[][];
 
-	public color: string;
+	public color?: string;
 
 	constructor(cells: InlineText[][], boundingBox: BoundingBox) {
 		const rowCount = cells.length;

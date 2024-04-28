@@ -43,7 +43,8 @@
 		"start": "npx tsx .",
 		"test": "jest",
 		"prepare": "husky",
-		"check": "npx tsc --noemit"
+		"check": "npx tsc --noemit",
+		"dev": "npx tsx watch --ignore accesslog.txt --ignore discordbot.log ."
 	},
 	"workspaces": [
 		"packages/*"

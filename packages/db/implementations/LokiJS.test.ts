@@ -67,7 +67,7 @@ describe('LokiJS database implementation', () => {
 			);
 			await collection2.updateOne({ num: 123 }, { num: 789, bool: true });
 			await collection2.updateOne({ num: 0 }, { num: -1, bool: true });
-			expect((await collection2.findOne({ bool: true })).num).toBe(789);
+			expect((await collection2.findOne({ bool: true }))?.num).toBe(789);
 			expect((await collection2.find({}).toArray()).length).toBe(3);
 			await collection2.deleteOne({ bool: false });
 			expect((await collection2.find({}).toArray()).length).toBe(2);
