@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { LANG, strFormat } from '../../../util/languages';
 
 export const DayOfWeek = Object.freeze({
 	Sunday: 0,
@@ -31,7 +32,7 @@ async function getHolidays() {
 }
 getHolidays();
 
-export class Day {
+export class CalendarDate {
 	public readonly year: number;
 
 	public readonly month: number;
@@ -49,7 +50,7 @@ export class Day {
 	}
 
 	add(days: number) {
-		return new Day(this.year, this.month, this.date + days);
+		return new CalendarDate(this.year, this.month, this.date + days);
 	}
 
 	is(date: Date): boolean {
@@ -64,12 +65,117 @@ export class Day {
 		return `${this.year}/${this.month + 1}/${this.date}`;
 	}
 
+	toHumanReadable() {
+		const holiday = this.holiday();
+		return strFormat(LANG.common.dateFormat, {
+			year: this.year,
+			month: LANG.common.monthNames[this.month],
+			date: this.date,
+			day: LANG.common.dayNames[this.day],
+			holiday:
+				holiday != null
+					? strFormat(LANG.common.holiday.yes, [holiday])
+					: LANG.common.holiday.no,
+		});
+	}
+
 	isHoliday() {
 		return holidays.has(this.toString());
 	}
+
+	holiday(): string | null {
+		return holidays.get(this.toString()) ?? null;
+	}
+
+	compare(other: CalendarDate): -1 | 0 | 1 {
+		if (this.year < other.year) {
+			return -1;
+		} else if (this.year > other.year) {
+			return 1;
+		}
+		// assert this.year == other.year
+
+		if (this.month < other.month) {
+			return -1;
+		} else if (this.month > other.month) {
+			return 1;
+		}
+		// assert this.month == other.month
+
+		if (this.date < other.date) {
+			return -1;
+		} else if (this.date > other.date) {
+			return 1;
+		}
+		// assert this.date == other.date
+
+		return 0;
+	}
+
+	asDate(): Date {
+		return new Date(this.year, this.month, this.date);
+	}
+
+	/**
+	 * 一年の初めからの日数を計算する。
+	 */
+	getDayOfYear(): number {
+		const start = new Date(this.year, 0, 0); // 前年の大晦日
+		return dayDiff(this.asDate(), start);
+	}
+
+	/**
+	 * 一年が終わるまでの日数を計算する。
+	 */
+	getRestDayOfYear(): number {
+		const end = new Date(this.year + 1, 0, 0); // 大晦日
+		return dayDiff(end, this.asDate());
+	}
+
+	diff(other: CalendarDate): {
+		years: number;
+		days: number;
+		comparison: -1 | 0 | 1;
+	} {
+		let date1: CalendarDate = this;
+		let date2: CalendarDate = other;
+		const comparison = date1.compare(date2);
+		if (comparison < 0) {
+			const temp = date1;
+			date1 = date2;
+			date2 = temp;
+		}
+		const years = date1.year - date2.year;
+		const dayOfYear = date1.getDayOfYear();
+		const days = dayOfYear - date2.getDayOfYear();
+		if (days >= 0) {
+			return { years, days, comparison };
+		} else {
+			return {
+				years: years - 1,
+				days: dayOfYear + date2.getRestDayOfYear(),
+				comparison,
+			};
+		}
+	}
+
+	static today(): CalendarDate {
+		const date = new Date();
+		return new CalendarDate(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate(),
+		);
+	}
 }
 
-export type Week = { [K in DayOfWeek]: Day } & Array<Day>;
+function dayDiff(date1: Date, date2: Date): number {
+	return Math.floor(
+		(date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24),
+	);
+}
+
+export type Week = { [K in DayOfWeek]: CalendarDate } & Array<CalendarDate>;
 
 export class MonthCalendar {
 	public readonly month: number;
@@ -87,9 +193,10 @@ export class MonthCalendar {
 		if (year == null) {
 			const date = new Date();
 			year = date.getFullYear();
-			if (monthIndex == null) {
-				monthIndex = date.getMonth();
-			}
+		}
+		if (monthIndex == null) {
+			const date = new Date();
+			monthIndex = date.getMonth();
 		}
 		this.month = monthIndex;
 		this.year = year;
@@ -97,10 +204,10 @@ export class MonthCalendar {
 	}
 
 	firstDay() {
-		return new Day(this.year, this.month, 1);
+		return new CalendarDate(this.year, this.month, 1);
 	}
 
-	includes(day: Day) {
+	includes(day: CalendarDate) {
 		if (day.year == this.year && day.month == this.month) {
 			return true;
 		}

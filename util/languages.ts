@@ -1,6 +1,6 @@
 import * as LANG from '../language/default.json';
 
-function assignDeep(target: Record<string, unknown>, source: unknown) {
+function assignDeep(target: Record<string, unknown>, source: object) {
 	for (const [key, value] of Object.entries(source)) {
 		const targetValue = target[key];
 		if (targetValue instanceof Object) {
@@ -11,7 +11,7 @@ function assignDeep(target: Record<string, unknown>, source: unknown) {
 	return target;
 }
 
-export function setLanguage(source: unknown) {
+export function setLanguage(source: object) {
 	assignDeep(LANG, source);
 }
 
