@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LANG, strFormat } from '../../../util/languages';
+import { LANG, strFormat } from 'core';
 
 export const DayOfWeek = Object.freeze({
 	Sunday: 0,

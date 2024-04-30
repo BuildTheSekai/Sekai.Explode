@@ -1,5 +1,5 @@
 const { setTimeout } = require('node:timers/promises');
-const { LANG } = require('../../util/languages');
+const { LANG } = require('../util/languages');
 
 /**
  * @type {(() => (void | Promise<void>))[]}

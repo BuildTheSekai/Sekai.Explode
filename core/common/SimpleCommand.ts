@@ -6,7 +6,7 @@ import {
 	SlashCommandSubcommandBuilder,
 } from 'discord.js';
 import { ChatInputCommandInteraction } from 'discord.js';
-import { Command } from '../../util/types';
+import { Command } from '../util/types';
 
 type Value<T, Required extends boolean = boolean> = Required extends true
 	? T

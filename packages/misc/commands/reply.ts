@@ -1,10 +1,7 @@
 import assert from 'assert';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { LANG } from '../../../util/languages';
+import { LANG, Config, Command, Pager } from 'core';
 import { ClientMessageHandler, ReplyPattern } from '../util/messages';
-import Pager from '../../../util/pager';
-import { Config } from 'core';
-import { Command } from '../../../util/types';
 
 module.exports = {
 	data: new SlashCommandBuilder()

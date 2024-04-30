@@ -8,8 +8,7 @@ const {
 } = require('discord.js');
 const { feature: db } = require('db'); //*MongoDB
 const { AdminUserIDs } = require('../../../config.json');
-const Pager = require('../../../util/pager');
-const { LANG, strFormat } = require('../../../util/languages');
+const { Pager, LANG, strFormat } = require('core');
 const config = require('../../../config.json');
 const cooldowns = new Map();
 

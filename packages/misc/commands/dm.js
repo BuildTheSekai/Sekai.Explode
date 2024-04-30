@@ -5,7 +5,7 @@ const {
 	TextInputStyle,
 	ActionRowBuilder,
 } = require('discord.js');
-const { LANG, strFormat } = require('../../../util/languages');
+const { LANG, strFormat } = require('core');
 const cooldowns = new Map();
 
 module.exports = {

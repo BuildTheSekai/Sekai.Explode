@@ -2,8 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const { AdminUserIDs } = require('../../../config.json');
 const childprocess = require('child_process');
 const path = require('path');
-const { LANG } = require('../../../util/languages');
-const { Schedules } = require('core');
+const { LANG, Schedules } = require('core');
 
 module.exports = {
 	data: new SlashCommandBuilder()

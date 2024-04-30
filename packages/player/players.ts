@@ -14,7 +14,7 @@ import {
 	TrackLike,
 	GuildNodeCreateOptions,
 } from 'discord-player';
-import Timespan from '../../util/timespan';
+import { Timespan } from 'core';
 import { Document, Collection, feature as db } from 'db';
 
 /** volumes コレクションのドキュメント */

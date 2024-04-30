@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import z from 'zod';
-import { setLanguage } from '../../util/languages';
+import { setLanguage } from '../util/languages';
 
 const tempLinkSrvConfigSchema = z.object({
 	tempLinkSrvToken: z.string(),

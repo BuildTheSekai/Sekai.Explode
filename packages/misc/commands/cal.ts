@@ -1,6 +1,5 @@
 import { createCanvas } from 'canvas';
-import { SimpleSlashCommandBuilder } from 'core';
-import { LANG, strFormat } from '../../../util/languages';
+import { SimpleSlashCommandBuilder, LANG, strFormat } from 'core';
 import { DayOfWeek, MonthCalendar } from '../util/calendar';
 import {
 	BoundingBox,

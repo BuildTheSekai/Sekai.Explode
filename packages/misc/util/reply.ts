@@ -1,4 +1,4 @@
-import { strFormat, LANG } from '../../../util/languages';
+import { strFormat, LANG } from 'core';
 import { Document } from 'db';
 
 export interface ReplySchema extends Document {

@@ -1,8 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import axios from 'axios';
 import FormData from 'form-data';
-import { Config } from 'core';
-import { LANG, strFormat } from '../../util/languages';
+import { Config, LANG, strFormat } from 'core';
 
 export default {
 	data: new SlashCommandBuilder()

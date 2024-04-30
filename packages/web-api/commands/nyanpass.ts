@@ -6,9 +6,8 @@ import {
 	ButtonStyle,
 	InteractionReplyOptions,
 } from 'discord.js';
-import { LANG, strFormat } from '../../../util/languages';
+import { LANG, strFormat, Command } from 'core';
 import axios from 'axios';
-import { Command } from '../../../util/types';
 
 interface NyanpassData {
 	time: string;

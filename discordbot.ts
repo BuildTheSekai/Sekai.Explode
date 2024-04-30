@@ -5,6 +5,8 @@ import {
 	Activities,
 	CommandManager,
 	Feature,
+	LANG,
+	strFormat,
 } from 'core';
 
 //* Discord.js Bot - by ringoXD -
@@ -16,7 +18,6 @@ import path from 'path';
 const { token, syslogChannel } = Config;
 process.env['FFMPEG_PATH'] = path.join(__dirname, 'ffmpeg');
 
-import { LANG, strFormat } from './util/languages';
 import assert from 'assert';
 
 const creset = '\x1b[0m';

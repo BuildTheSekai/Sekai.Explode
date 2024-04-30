@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import dns from 'dns';
 import axios from 'axios';
 import ipRangeCheck from 'ip-range-check';
-import { LANG, strFormat } from '../../../util/languages';
+import { LANG, strFormat } from 'core';
 import { getIpInfo } from '../ip-api';
 import assert from 'assert';
 let cfIps: string[] = [];

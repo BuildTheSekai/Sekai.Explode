@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { LANG, strFormat } = require('../../../util/languages');
+const { LANG, strFormat } = require('core');
 
 function GenNum() {
 	const min = 1;

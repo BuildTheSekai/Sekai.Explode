@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { GuildQueue, Player } from 'discord-player';
-import { LANG, strFormat } from '../../util/languages';
-import { CommandManager, Feature, Config } from 'core';
+import { LANG, strFormat, CommandManager, Feature, Config } from 'core';
 import {
 	restoreQueues,
 	saveQueue,

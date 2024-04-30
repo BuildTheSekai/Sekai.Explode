@@ -1,4 +1,10 @@
-import { LANG, strFormat } from '../../../util/languages';
+import {
+	LANG,
+	strFormat,
+	FormatTableOption,
+	formatTable,
+	SimpleSlashCommandBuilder,
+} from 'core';
 import {
 	CheckHostRequest,
 	CheckPingOk,
@@ -10,8 +16,6 @@ import {
 	CheckDnsOk,
 	CheckHostResult,
 } from '../check-host';
-import { FormatTableOption, formatTable } from '../../../util/strings';
-import { SimpleSlashCommandBuilder } from 'core';
 
 const MAX_NODES = 40;
 

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { LANG } from '../../../util/languages';
+import { LANG } from 'core';
 import { PlayerCommand } from '../PlayerCommand';
 
 module.exports = new PlayerCommand(

@@ -1,5 +1,4 @@
-import { Feature, Config } from 'core';
-import { LANG } from '../../util/languages';
+import { Feature, Config, LANG } from 'core';
 import mongoose from 'mongoose';
 import Loki from 'lokijs';
 import { Connection } from './types';

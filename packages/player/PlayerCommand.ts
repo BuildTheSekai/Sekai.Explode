@@ -1,6 +1,5 @@
 import { getPlayableVoiceChannelId, getPlayingQueue } from './players';
-import { LANG } from '../../util/languages';
-import { Command } from '../../util/types';
+import { LANG, Command } from 'core';
 import { QueueMetadata } from './players';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { GuildQueue } from 'discord-player';

@@ -3,7 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios').default;
-const { LANG, strFormat } = require('../../util/languages');
+const { LANG, strFormat } = require('core');
 const {
 	tempLinkSrvToken,
 	tempLinkSrvPostURL,
