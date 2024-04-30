@@ -2,6 +2,8 @@ import { Feature } from '../../common/Feature';
 import { CommandManager } from '../../internal/commands';
 import config from '../../internal/config';
 import { feature as db } from 'db';
+import globalban from './commands/globalban';
+import updater from './commands/updater';
 
 class AdminFeature extends Feature {
 	name = 'admin';
@@ -10,11 +12,8 @@ class AdminFeature extends Feature {
 
 	dependencies = [db];
 
-	onLoad() {
-		CommandManager.default.addCommands([
-			require('./commands/globalban'),
-			require('./commands/updater'),
-		]);
+	async onLoad() {
+		CommandManager.default.addCommands([globalban, updater]);
 	}
 }
 

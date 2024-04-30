@@ -2,7 +2,7 @@ import { teeWrite } from './internal/logger';
 
 //* Discord.js Bot - by ringoXD -
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1';
-require('colors');
+import 'colors';
 import { Client, GatewayIntentBits, ActivityType } from 'discord.js';
 import fs from 'fs/promises';
 import path from 'path';
