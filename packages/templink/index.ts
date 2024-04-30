@@ -1,4 +1,4 @@
-import { Feature } from '../../common/Feature';
+import { Feature } from 'core';
 import { CommandManager } from '../../internal/commands';
 import templinkCommand from './command';
 import { enableTempLinks, disableTempLinks } from './templinks';

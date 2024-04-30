@@ -1,4 +1,4 @@
-import { CompoundCommandBuilder } from '../../../common/CompoundCommand';
+import { CompoundCommandBuilder } from 'core';
 import { LANG, strFormat } from '../../../util/languages';
 import { CalendarDate } from '../util/calendar';
 

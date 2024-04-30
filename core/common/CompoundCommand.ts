@@ -11,7 +11,7 @@ import {
 	SimpleCommand,
 	SimpleSlashCommandBuilder,
 } from './SimpleCommand';
-import { Command } from '../util/types';
+import { Command } from '../../util/types';
 
 export class CompoundCommandBuilder {
 	readonly #handle: SlashCommandBuilder;

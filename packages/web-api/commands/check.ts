@@ -11,7 +11,7 @@ import {
 	CheckHostResult,
 } from '../check-host';
 import { FormatTableOption, formatTable } from '../../../util/strings';
-import { SimpleSlashCommandBuilder } from '../../../common/SimpleCommand';
+import { SimpleSlashCommandBuilder } from 'core';
 
 const MAX_NODES = 40;
 

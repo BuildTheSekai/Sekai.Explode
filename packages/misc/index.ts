@@ -3,7 +3,7 @@ import { ClientMessageHandler } from './util/messages';
 import fs from 'fs';
 import path from 'path';
 
-import { Feature } from '../../common/Feature';
+import { Feature } from 'core';
 import { CommandManager } from '../../internal/commands';
 import { registerConfiguredFont } from './util/canvasUtils';
 import { Client } from 'discord.js';

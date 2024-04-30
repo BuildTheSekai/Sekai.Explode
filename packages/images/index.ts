@@ -1,4 +1,4 @@
-import { Feature } from '../../common/Feature';
+import { Feature } from 'core';
 
 class ImagesFeature extends Feature {
 	enabled: boolean = true;

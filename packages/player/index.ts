@@ -8,7 +8,7 @@ import {
 	getDuration,
 	deleteSavedQueues,
 } from './players';
-import { Feature } from '../../common/Feature';
+import { Feature } from 'core';
 import { Client } from 'discord.js';
 import * as db from 'db';
 import config from '../../internal/config';

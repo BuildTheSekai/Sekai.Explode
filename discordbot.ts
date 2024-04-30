@@ -16,7 +16,7 @@ import activity from './internal/activity';
 import { LANG, strFormat } from './util/languages';
 import { CommandManager } from './internal/commands';
 import assert from 'assert';
-import { Feature } from './common/Feature';
+import { Feature } from 'core';
 
 const creset = '\x1b[0m';
 const cgreen = '\x1b[32m';

@@ -1,4 +1,4 @@
-import { Feature } from '../../common/Feature';
+import { Feature } from 'core';
 import { LANG } from '../../util/languages';
 import mongoose from 'mongoose';
 import Loki from 'lokijs';
