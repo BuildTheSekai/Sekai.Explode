@@ -3,16 +3,14 @@ import { ClientMessageHandler } from './util/messages';
 import fs from 'fs';
 import path from 'path';
 
-import { Feature } from 'core';
-import { CommandManager } from '../../internal/commands';
+import { Feature, CommandManager, Config } from 'core';
 import { registerConfiguredFont } from './util/canvasUtils';
 import { Client } from 'discord.js';
-import config from '../../internal/config';
 
 class MiscFeature extends Feature {
 	name = 'misc';
 
-	enabled = config.features?.misc ?? true;
+	enabled = Config.features?.misc ?? true;
 
 	messageHandler?: ClientMessageHandler;
 

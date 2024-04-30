@@ -3,7 +3,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { LANG } from '../../../util/languages';
 import { ClientMessageHandler, ReplyPattern } from '../util/messages';
 import Pager from '../../../util/pager';
-import config from '../../../internal/config';
+import { Config } from 'core';
 import { Command } from '../../../util/types';
 
 module.exports = {
@@ -161,7 +161,7 @@ module.exports = {
  * 使う権限があるかをチェックする。
  */
 async function checkPermission(interaction: ChatInputCommandInteraction) {
-	if (!config.replyCustomizeAllowedUsers?.includes(interaction.user.id)) {
+	if (!Config.replyCustomizeAllowedUsers?.includes(interaction.user.id)) {
 		await interaction.reply({
 			content: LANG.commands.reply.permissionError,
 			ephemeral: true,

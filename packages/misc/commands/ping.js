@@ -1,8 +1,8 @@
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const { SlashCommandBuilder } = require('discord.js');
-const activityModule = require('../../../internal/activity');
+const { Activities } = require('core');
 const { LANG, strFormat } = require('../../../util/languages');
-const wspingValues = activityModule.getPingValues();
+const wspingValues = Activities.getPingValues();
 
 // いいかんじに
 

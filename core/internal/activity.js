@@ -1,5 +1,5 @@
 const { ActivityType } = require('discord.js');
-const { LANG, strFormat } = require('../util/languages');
+const { LANG, strFormat } = require('../../util/languages');
 const { onShutdown } = require('./schedules');
 
 console.log(LANG.internal.activity.called);

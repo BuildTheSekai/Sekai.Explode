@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import z from 'zod';
-import { setLanguage } from '../util/languages';
+import { setLanguage } from '../../util/languages';
 
 const tempLinkSrvConfigSchema = z.object({
 	tempLinkSrvToken: z.string(),
@@ -66,13 +66,14 @@ function loadJson(path: string) {
 }
 
 const config = configSchema.parse(
-	loadJson(path.join(__dirname, '..', 'config.json')),
+	loadJson(path.join(__dirname, '..', '..', 'config.json')),
 );
 
 setLanguage(
 	loadJson(
 		path.join(
 			__dirname,
+			'..',
 			'..',
 			'language',
 			(config.language ?? 'default') + '.json',

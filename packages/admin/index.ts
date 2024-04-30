@@ -1,6 +1,4 @@
-import { Feature } from 'core';
-import { CommandManager } from '../../internal/commands';
-import config from '../../internal/config';
+import { Feature, CommandManager, Config } from 'core';
 import { feature as db } from 'db';
 import globalban from './commands/globalban';
 import updater from './commands/updater';
@@ -8,7 +6,7 @@ import updater from './commands/updater';
 class AdminFeature extends Feature {
 	name = 'admin';
 
-	enabled = config.features?.admin ?? true;
+	enabled = Config.features?.admin ?? true;
 
 	dependencies = [db];
 

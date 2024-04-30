@@ -1,24 +1,22 @@
 import assert from 'assert';
 import { GuildQueue, Player } from 'discord-player';
 import { LANG, strFormat } from '../../util/languages';
-import { CommandManager } from '../../internal/commands';
+import { CommandManager, Feature, Config } from 'core';
 import {
 	restoreQueues,
 	saveQueue,
 	getDuration,
 	deleteSavedQueues,
 } from './players';
-import { Feature } from 'core';
 import { Client } from 'discord.js';
 import * as db from 'db';
-import config from '../../internal/config';
 
 class PlayerFeature extends Feature {
 	#player: Player | null = null;
 
 	name = 'player';
 
-	enabled = config.features?.player ?? true;
+	enabled = Config.features?.player ?? true;
 
 	dependencies = [db.feature];
 

@@ -1,6 +1,6 @@
-import { strFormat, LANG } from '../util/languages';
+import { strFormat, LANG } from '../../util/languages';
 import { ChatInputCommandInteraction, Client } from 'discord.js';
-import { Command } from '../util/types';
+import { Command } from '../../util/types';
 
 export class CommandManager {
 	static readonly default = new CommandManager();

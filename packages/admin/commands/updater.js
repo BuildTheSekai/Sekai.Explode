@@ -3,7 +3,7 @@ const { AdminUserIDs } = require('../../../config.json');
 const childprocess = require('child_process');
 const path = require('path');
 const { LANG } = require('../../../util/languages');
-const { shutdown } = require('../../../internal/schedules');
+const { Schedules } = require('core');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -62,7 +62,7 @@ module.exports = {
 					'\n```\n' +
 					LANG.commands.updater.restarting.join('\n'),
 			);
-			shutdown();
+			Schedules.shutdown();
 		});
 	},
 };

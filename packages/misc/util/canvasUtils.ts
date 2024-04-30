@@ -1,8 +1,8 @@
 import { CanvasRenderingContext2D, registerFont } from 'canvas';
-import config from '../../../internal/config';
+import { Config } from 'core';
 
-const FONT_FILE = config.fontFile ?? 'font.ttf';
-export const FONT_FAMILY = config.fontFamily ?? 'serif';
+const FONT_FILE = Config.fontFile ?? 'font.ttf';
+export const FONT_FAMILY = Config.fontFamily ?? 'serif';
 
 function requireNonnegative(x: number, name: string): number {
 	if (x < 0) {

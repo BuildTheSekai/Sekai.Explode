@@ -1,13 +1,11 @@
-import { Feature } from 'core';
-import { CommandManager } from '../../internal/commands';
+import { Feature, CommandManager, Config } from 'core';
 import templinkCommand from './command';
 import { enableTempLinks, disableTempLinks } from './templinks';
-import config from '../../internal/config';
 
 class TempLinkFeature extends Feature {
 	name = 'templink';
 
-	enabled = config.features?.templink ?? true;
+	enabled = Config.features?.templink ?? true;
 
 	onLoad() {
 		enableTempLinks();

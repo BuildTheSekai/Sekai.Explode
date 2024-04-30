@@ -1,4 +1,11 @@
-import { teeWrite } from './internal/logger';
+import {
+	Logger,
+	Config,
+	Schedules,
+	Activities,
+	CommandManager,
+	Feature,
+} from 'core';
 
 //* Discord.js Bot - by ringoXD -
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1';
@@ -6,24 +13,18 @@ import 'colors';
 import { Client, GatewayIntentBits, ActivityType } from 'discord.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { token, syslogChannel } from './internal/config';
+const { token, syslogChannel } = Config;
 process.env['FFMPEG_PATH'] = path.join(__dirname, 'ffmpeg');
 
-//!Load Internal dir code
-import { onShutdown } from './internal/schedules';
-import activity from './internal/activity';
-
 import { LANG, strFormat } from './util/languages';
-import { CommandManager } from './internal/commands';
 import assert from 'assert';
-import { Feature } from 'core';
 
 const creset = '\x1b[0m';
 const cgreen = '\x1b[32m';
 
 //!LOGGER
-teeWrite(process.stdout, 'discordbot.log');
-teeWrite(process.stderr, 'discordbot.log');
+Logger.teeWrite(process.stdout, 'discordbot.log');
+Logger.teeWrite(process.stderr, 'discordbot.log');
 
 //!RUN=======================
 
@@ -42,7 +43,7 @@ const options = {
 
 const client = new Client(options);
 console.log(LANG.discordbot.main.setupActivityCalling);
-activity.setupActivity(client);
+Activities.setupActivity(client);
 
 const featuresLoadPromise = fs
 	.readdir(path.join(__dirname, 'packages'))
@@ -111,7 +112,7 @@ client.on('ready', async (readyClient) => {
 	SyslogChannel.send(LANG.discordbot.ready.sysLog);
 });
 
-onShutdown(async () => {
+Schedules.onShutdown(async () => {
 	const SyslogChannel = client.channels.cache.get(syslogChannel);
 	assert(SyslogChannel?.isTextBased());
 	await SyslogChannel.send(LANG.discordbot.shutdown.sysLog);
