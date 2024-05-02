@@ -8,6 +8,7 @@ export { default as Config } from './internal/config';
 export * as Logger from './internal/logger';
 export * as Schedules from './internal/schedules';
 
+export * from './util/calendar';
 export * from './util/languages';
 export { default as Pager } from './util/pager';
 export * as Result from './util/result';

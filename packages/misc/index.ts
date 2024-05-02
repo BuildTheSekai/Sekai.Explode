@@ -3,7 +3,6 @@ import { ClientMessageHandler } from './util/messages';
 import path from 'path';
 
 import { Feature, CommandManager, Config } from 'core';
-import { registerConfiguredFont } from './util/canvasUtils';
 import { Client } from 'discord.js';
 
 class MiscFeature extends Feature {
@@ -17,7 +16,6 @@ class MiscFeature extends Feature {
 		client.on('messageCreate', (message) =>
 			this.messageHandler?.handleMessage(message),
 		);
-		registerConfiguredFont();
 		await CommandManager.default.loadDirectory(
 			path.join(__dirname, 'commands'),
 		);

@@ -1,5 +1,4 @@
-import { CompoundCommandBuilder, LANG, strFormat } from 'core';
-import { CalendarDate } from '../util/calendar';
+import { CompoundCommandBuilder, LANG, strFormat, CalendarDate } from 'core';
 
 const builder = new CompoundCommandBuilder(
 	LANG.commands.date.name,
