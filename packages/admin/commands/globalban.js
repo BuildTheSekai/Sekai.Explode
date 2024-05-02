@@ -7,9 +7,7 @@ const {
 	ActionRowBuilder,
 } = require('discord.js');
 const { feature: db } = require('db'); //*MongoDB
-const { AdminUserIDs } = require('../../../config.json');
-const { Pager, LANG, strFormat } = require('core');
-const config = require('../../../config.json');
+const { Pager, LANG, strFormat, Config } = require('core');
 const cooldowns = new Map();
 
 module.exports = {
@@ -159,7 +157,7 @@ module.exports = {
 			subcommand === LANG.commands.globalban.subcommands.add.name ||
 			subcommand === LANG.commands.globalban.subcommands.remove.name
 		) {
-			if (!AdminUserIDs.includes(executorID)) {
+			if (!Config.AdminUserIDs.includes(executorID)) {
 				await interaction.editReply(LANG.commands.globalban.permissionError);
 				return;
 			}
@@ -437,10 +435,10 @@ module.exports = {
 					],
 					ephemeral: true,
 				});
-				if (!config.notificationChannel) {
+				if (!Config.notificationChannel) {
 					throw new Error(LANG.commands.globalban.subcommands.report.error);
 				}
-				const channel = client.channels.cache.get(config.notificationChannel);
+				const channel = client.channels.cache.get(Config.notificationChannel);
 				const d = new Date();
 				const u = d.getTime();
 				const fxunix = Math.floor(u / 1000);
