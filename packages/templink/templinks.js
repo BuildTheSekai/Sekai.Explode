@@ -3,13 +3,9 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios').default;
-const { LANG, strFormat } = require('../../util/languages');
-const {
-	tempLinkSrvToken,
-	tempLinkSrvPostURL,
-	linkPort,
-	linkDomain,
-} = require('../../config.json');
+const { LANG, strFormat, Config } = require('core');
+
+const { tempLinkSrvToken, tempLinkSrvPostURL, linkPort, linkDomain } = Config;
 
 // 内部 TempLink サーバー
 

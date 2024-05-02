@@ -1,8 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
-import Pager from '../../../util/pager';
 import { getDuration } from '../players';
-import Timespan from '../../../util/timespan';
-import { LANG, strFormat } from '../../../util/languages';
+import { Pager, Timespan, LANG, strFormat } from 'core';
 import { PlayerCommand } from '../PlayerCommand';
 
 module.exports = new PlayerCommand(

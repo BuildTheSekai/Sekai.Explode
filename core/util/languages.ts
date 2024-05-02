@@ -1,4 +1,4 @@
-import * as LANG from '../language/default.json';
+import * as LANG from '../../language/default.json';
 
 function assignDeep(target: Record<string, unknown>, source: object) {
 	for (const [key, value] of Object.entries(source)) {

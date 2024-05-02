@@ -47,6 +47,7 @@
 		"dev": "npx tsx watch --ignore accesslog.txt --ignore discordbot.log ."
 	},
 	"workspaces": [
-		"packages/*"
+		"packages/*",
+		"core"
 	]
 }

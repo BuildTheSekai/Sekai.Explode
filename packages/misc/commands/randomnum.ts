@@ -1,5 +1,4 @@
-import { LANG, strFormat } from '../../../util/languages';
-import { SimpleSlashCommandBuilder } from '../../../common/SimpleCommand';
+import { LANG, strFormat, SimpleSlashCommandBuilder } from 'core';
 
 const DEFAULT_MIN_VALUE = 0;
 const DEFAULT_MAX_VALUE = 99;

@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import z from 'zod';
 import { setLanguage } from '../util/languages';
 
@@ -34,6 +34,7 @@ const configSchema = z
 			.object({
 				admin: z.boolean().optional(),
 				cdn: z.boolean().optional(),
+				images: z.boolean().optional(),
 				misc: z.boolean().optional(),
 				player: z.boolean().optional(),
 				templink: z.boolean().optional(),
@@ -66,13 +67,14 @@ function loadJson(path: string) {
 }
 
 const config = configSchema.parse(
-	loadJson(path.join(__dirname, '..', 'config.json')),
+	loadJson(path.join(__dirname, '..', '..', 'config.json')),
 );
 
 setLanguage(
 	loadJson(
 		path.join(
 			__dirname,
+			'..',
 			'..',
 			'language',
 			(config.language ?? 'default') + '.json',

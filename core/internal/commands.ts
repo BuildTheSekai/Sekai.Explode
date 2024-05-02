@@ -1,3 +1,5 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { strFormat, LANG } from '../util/languages';
 import { ChatInputCommandInteraction, Client } from 'discord.js';
 import { Command } from '../util/types';
@@ -43,6 +45,19 @@ export class CommandManager {
 
 	get size() {
 		return this.#commands.size;
+	}
+
+	async loadDirectory(name: string): Promise<void> {
+		const files = await fs.readdir(name, { withFileTypes: true });
+		for (const file of files) {
+			const ext = path.extname(file.name);
+			if (!file.isFile() || (ext != '.js' && ext != '.ts')) return;
+			let cmds = await import(path.join(name, file.name));
+			if ('default' in cmds) {
+				cmds = cmds.default;
+			}
+			this.addCommands(cmds);
+		}
 	}
 
 	/**

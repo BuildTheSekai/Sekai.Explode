@@ -1,8 +1,6 @@
-import { Result } from '../../util/result';
-import { Split } from '../../util/types';
+import { Result, Split } from 'core';
 
 const axios = require('axios').default;
-const { Ok, Err } = require('../../util/result');
 
 interface IpApiGeolocationFullData {
 	status: string;
@@ -50,13 +48,13 @@ type IpApiGeolocationData<T extends string> =
 export async function getIpInfo<F extends string>(
 	ip: string,
 	params?: IpApiGeolocationOption<F>,
-): Promise<Result<IpApiGeolocationData<F>>> {
+): Promise<Result.Result<IpApiGeolocationData<F>>> {
 	try {
 		const res = await axios.get(
 			`http://ip-api.com/json/${encodeURI(ip)}?${new URLSearchParams(params as Record<string, string>)}`,
 		);
-		return new Ok(/** @type {IpApiGeolocationData<F>} */ res.data);
+		return new Result.Ok(/** @type {IpApiGeolocationData<F>} */ res.data);
 	} catch (e) {
-		return new Err(e);
+		return new Result.Err(e);
 	}
 }
