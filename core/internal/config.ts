@@ -34,6 +34,7 @@ const configSchema = z
 			.object({
 				admin: z.boolean().optional(),
 				cdn: z.boolean().optional(),
+				images: z.boolean().optional(),
 				misc: z.boolean().optional(),
 				player: z.boolean().optional(),
 				templink: z.boolean().optional(),

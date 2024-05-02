@@ -1,10 +1,10 @@
-import { CommandManager, Feature } from 'core';
+import { CommandManager, Config, Feature } from 'core';
 import { registerConfiguredFont } from './util/canvasUtils';
 import { Client } from 'discord.js';
 import path from 'path';
 
 class ImagesFeature extends Feature {
-	enabled: boolean = true;
+	enabled: boolean = Config.features?.images ?? true;
 
 	name: string = 'images';
 
