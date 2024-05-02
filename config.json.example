@@ -4,6 +4,7 @@
 	"features": {
 		"admin": true,
 		"cdn": true,
+		"images": true,
 		"misc": true,
 		"player": true,
 		"templink": true,

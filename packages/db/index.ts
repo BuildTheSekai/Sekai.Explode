@@ -1,8 +1,6 @@
-import { Feature } from '../../common/Feature';
-import { LANG } from '../../util/languages';
+import { Feature, Config, LANG } from 'core';
 import mongoose from 'mongoose';
 import Loki from 'lokijs';
-import config from '../../internal/config';
 import { Connection } from './types';
 import { MongoDBWrapper } from './implementations/MongoDB';
 import { LokiJSWrapper } from './implementations/LokiJS';
@@ -20,8 +18,8 @@ class DbFeature extends Feature {
 
 	constructor() {
 		super();
-		console.log('database: ', config.database);
-		switch (config.database) {
+		console.log('database: ', Config.database);
+		switch (Config.database) {
 			default:
 			case 'mongo': {
 				const connection = mongoose.connection;
@@ -40,7 +38,7 @@ class DbFeature extends Feature {
 				this.connection = new MongoDBWrapper(connection);
 				this.connectionPromise = mongoose
 					.connect(
-						`mongodb://${config.mongoDBuser}:${config.mongoDBpass}@${config.mongoDBhost}:${config.mongoDBport}/${config.mongoDBdatabase}?authSource=admin`,
+						`mongodb://${Config.mongoDBuser}:${Config.mongoDBpass}@${Config.mongoDBhost}:${Config.mongoDBport}/${Config.mongoDBdatabase}?authSource=admin`,
 					)
 					.then(() => undefined);
 				return;
@@ -54,7 +52,7 @@ class DbFeature extends Feature {
 					resolve = res;
 					reject = rej;
 				});
-				const loki = new Loki(config.lokiJSfile ?? 'database.json', {
+				const loki = new Loki(Config.lokiJSfile ?? 'database.json', {
 					autosave: true,
 					autosaveInterval: 1000,
 					autoload: true,

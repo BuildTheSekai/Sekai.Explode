@@ -1,5 +1,5 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { LANG, strFormat } from '../../util/languages';
+import { LANG, strFormat } from 'core';
 import {
 	areTempLinksEnabled,
 	createTempLink,

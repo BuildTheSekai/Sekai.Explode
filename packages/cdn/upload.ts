@@ -1,8 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import axios from 'axios';
 import FormData from 'form-data';
-import config from '../../internal/config';
-import { LANG, strFormat } from '../../util/languages';
+import { Config, LANG, strFormat } from 'core';
 
 export default {
 	data: new SlashCommandBuilder()
@@ -26,11 +25,11 @@ export default {
 				.setRequired(false),
 		),
 	execute: async function (interaction: ChatInputCommandInteraction) {
-		if (!config.cdnUploadURL || !config.uploadAllowUsers) {
+		if (!Config.cdnUploadURL || !Config.uploadAllowUsers) {
 			await interaction.reply(LANG.commands.upload.internalError);
 			return;
 		}
-		if (!config.uploadAllowUsers.includes(interaction.user.id)) {
+		if (!Config.uploadAllowUsers.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: LANG.commands.upload.permissionError,
 				ephemeral: true,
@@ -55,7 +54,7 @@ export default {
 				) == true;
 			console.log(strFormat(LANG.commands.upload.isPrivateLog, [isPrivate]));
 			form.append('file', Buffer.from(resData), filename || file.name);
-			const res2 = await axios.post(config.cdnUploadURL, form, {
+			const res2 = await axios.post(Config.cdnUploadURL, form, {
 				params: {
 					private: isPrivate,
 				},
@@ -65,7 +64,7 @@ export default {
 			// console.log("==========")
 			// console.log(res2)
 			const cdnURL =
-				config.cdnRootURL + (isPrivate ? 'private/' : '') + res2.data.fileName;
+				Config.cdnRootURL + (isPrivate ? 'private/' : '') + res2.data.fileName;
 			interaction.editReply(LANG.commands.upload.fileUploaded + '\n' + cdnURL);
 			const user = interaction.user;
 			const dmChannel = await user.createDM();
@@ -95,15 +94,15 @@ export default {
 				],
 			});
 			try {
-				if (!config.cfZone || !config.cfToken || !config.cfPurgeUrl) return;
+				if (!Config.cfZone || !Config.cfToken || !Config.cfPurgeUrl) return;
 				axios.post(
-					`https://api.cloudflare.com/client/v4/zones/${config.cfZone}/purge_cache`,
+					`https://api.cloudflare.com/client/v4/zones/${Config.cfZone}/purge_cache`,
 					{
-						files: [config.cfPurgeUrl],
+						files: [Config.cfPurgeUrl],
 					},
 					{
 						headers: {
-							Authorization: `Bearer ${config.cfToken}`,
+							Authorization: `Bearer ${Config.cfToken}`,
 							'Content-Type': 'application/json',
 						},
 					},

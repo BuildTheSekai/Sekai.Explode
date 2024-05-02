@@ -16,7 +16,7 @@
  */
 
 import axios from 'axios';
-import { strFormat, LANG } from '../../../util/languages';
+import { strFormat, LANG } from 'core';
 import { feature as db, Collection, Document } from 'db';
 import { Client, Message } from 'discord.js';
 import { ReplyPattern, ReplySchema } from './reply';

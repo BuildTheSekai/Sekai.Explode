@@ -1,11 +1,9 @@
-import { Feature } from '../../common/Feature';
-import { CommandManager } from '../../internal/commands';
-import config from '../../internal/config';
+import { Feature, CommandManager, Config } from 'core';
 
 class WebApiFeature extends Feature {
 	name = 'web-api';
 
-	enabled = config.features?.['web-api'] ?? true;
+	enabled = Config.features?.['web-api'] ?? true;
 
 	onLoad() {
 		CommandManager.default.addCommands([

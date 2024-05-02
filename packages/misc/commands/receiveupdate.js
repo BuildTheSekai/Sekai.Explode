@@ -5,7 +5,7 @@ const {
 	PermissionsBitField,
 	NewsChannel,
 } = require('discord.js');
-const { LANG, strFormat } = require('../../../util/languages');
+const { LANG, strFormat } = require('core');
 
 module.exports = {
 	data: new SlashCommandBuilder()

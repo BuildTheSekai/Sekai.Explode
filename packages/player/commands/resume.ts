@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { LANG } from '../../../util/languages';
+import { LANG, Command } from 'core';
 import { getPlayableVoiceChannelId, getPlayingQueue } from '../players';
-import { Command } from '../../../util/types';
 
 const commandResume: Command = {
 	data: new SlashCommandBuilder()
