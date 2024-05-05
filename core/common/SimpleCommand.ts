@@ -2,8 +2,11 @@ import {
 	APIApplicationCommandOptionChoice,
 	ApplicationCommandOptionWithChoicesAndAutocompleteMixin,
 	CacheType,
+	GuildMember,
+	Role,
 	SharedSlashCommandOptions,
 	SlashCommandSubcommandBuilder,
+	User,
 } from 'discord.js';
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Command } from '../util/types';
@@ -49,6 +52,11 @@ interface SimpleStringOptionData<
 	max_length?: number;
 	min_length?: number;
 }
+
+type Mentionable = GuildMember | Role | User;
+
+type SimpleMentionableOptionData<Required extends boolean = boolean> =
+	SimpleCommandOptionData<Mentionable, Required>;
 
 export interface Option<T = unknown, Required extends boolean = boolean> {
 	/** オプションの名前 */
@@ -157,6 +165,49 @@ class StringOption<
 	}
 }
 
+class MentionableOption<Required extends boolean = boolean>
+	implements Option<Mentionable, Required>
+{
+	name: string;
+
+	required: Required;
+
+	constructor(
+		builder: SharedSlashCommandOptions,
+		input: SimpleMentionableOptionData<Required>,
+	) {
+		const name = input.name;
+		const description = input.description;
+		const required = input.required;
+		this.name = name;
+		this.required = required;
+		try {
+			builder.addMentionableOption((input) => {
+				return input
+					.setName(name)
+					.setDescription(description)
+					.setRequired(required);
+			});
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
+	get(
+		interaction: ChatInputCommandInteraction<CacheType>,
+	): Value<Mentionable, Required> {
+		return this.required
+			? (interaction.options.getMentionable(this.name, true) as Value<
+					Mentionable,
+					Required
+				>)
+			: (interaction.options.getMentionable(this.name) as Value<
+					Mentionable,
+					Required
+				>);
+	}
+}
+
 /**
  * シンプルな SlashCommandBuilder(?)
  */
@@ -229,6 +280,12 @@ export class SimpleSlashCommandBuilder<
 		input: SimpleStringOptionData<T, Required>,
 	) {
 		return this.addOption(new StringOption(this.handle, input));
+	}
+
+	addMentionableOption<Required extends boolean = boolean>(
+		input: SimpleMentionableOptionData<Required>,
+	) {
+		return this.addOption(new MentionableOption(this.handle, input));
 	}
 
 	build(
