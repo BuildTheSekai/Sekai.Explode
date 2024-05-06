@@ -1,5 +1,6 @@
 import { CompoundCommandBuilder } from 'core';
 import { feature as db } from 'db';
+import { PermissionFlagsBits } from 'discord.js';
 
 interface PermSchema {
 	guild: string;
@@ -26,6 +27,15 @@ builder
 		if (!interaction.inCachedGuild()) {
 			interaction.reply({
 				content: 'このコマンドはサーバー内で使用してください！',
+				ephemeral: true,
+			});
+			return;
+		}
+		if (
+			!interaction.member.permissions.has(PermissionFlagsBits.Administrator)
+		) {
+			await interaction.reply({
+				content: '権限がありません！',
 				ephemeral: true,
 			});
 			return;
