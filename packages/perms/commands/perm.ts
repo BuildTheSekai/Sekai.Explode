@@ -23,8 +23,7 @@ builder
 	})
 	.build(async (interaction, permissionName, group) => {
 		const connection = db.connection;
-		const guild = interaction.guild;
-		if (guild == null) {
+		if (!interaction.inCachedGuild()) {
 			interaction.reply({
 				content: 'このコマンドはサーバー内で使用してください！',
 				ephemeral: true,
@@ -33,7 +32,7 @@ builder
 		}
 		const collection = connection.collection<PermSchema>('perms');
 		collection.insertOne({
-			guild: guild.id,
+			guild: interaction.guild.id,
 			name: permissionName,
 			group: group.id,
 		});
@@ -51,8 +50,7 @@ builder
 	})
 	.build(async (interaction, permissionName) => {
 		const connection = db.connection;
-		const guild = interaction.guild;
-		if (guild == null) {
+		if (!interaction.inCachedGuild()) {
 			interaction.reply({
 				content: 'このコマンドはサーバー内で使用してください！',
 				ephemeral: true,
@@ -61,7 +59,7 @@ builder
 		}
 		const collection = connection.collection<PermSchema>('perms');
 		const result = await collection.findOne({
-			guild: guild.id,
+			guild: interaction.guild.id,
 			name: permissionName,
 		});
 		if (result != null) {
