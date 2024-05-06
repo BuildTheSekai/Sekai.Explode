@@ -25,7 +25,7 @@ builder
 	.build(async (interaction, permissionName, group) => {
 		const connection = db.connection;
 		if (!interaction.inCachedGuild()) {
-			interaction.reply({
+			await interaction.reply({
 				content: 'このコマンドはサーバー内で使用してください！',
 				ephemeral: true,
 			});
@@ -61,7 +61,7 @@ builder
 	.build(async (interaction, permissionName) => {
 		const connection = db.connection;
 		if (!interaction.inCachedGuild()) {
-			interaction.reply({
+			await interaction.reply({
 				content: 'このコマンドはサーバー内で使用してください！',
 				ephemeral: true,
 			});
