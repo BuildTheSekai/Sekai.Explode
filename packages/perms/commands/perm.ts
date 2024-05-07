@@ -1,12 +1,7 @@
 import { CompoundCommandBuilder } from 'core';
 import { feature as db } from 'db';
 import { PermissionFlagsBits } from 'discord.js';
-
-interface PermSchema {
-	guild: string;
-	name: string;
-	group: string;
-}
+import { PermissionManager } from '../PermissionManager';
 
 const builder = new CompoundCommandBuilder('perm', '権限の設定');
 
@@ -40,14 +35,10 @@ builder
 			});
 			return;
 		}
-		const collection = connection.collection<PermSchema>('perms');
-		collection.insertOne({
-			guild: interaction.guild.id,
-			name: permissionName,
-			group: group.id,
-		});
+		const permissions = PermissionManager.forClient(interaction.client);
+		await permissions.set(interaction.guild, permissionName, group);
 		await interaction.reply(
-			`権限を追加しました!\n権限名: ${permissionName}\nロール/メンバーID: ${group.id}`,
+			`権限を追加しました!\n権限名: ${permissionName}\nロール/メンバー: ${group}`,
 		);
 	});
 
@@ -67,14 +58,11 @@ builder
 			});
 			return;
 		}
-		const collection = connection.collection<PermSchema>('perms');
-		const result = await collection.findOne({
-			guild: interaction.guild.id,
-			name: permissionName,
-		});
+		const permissions = PermissionManager.forClient(interaction.client);
+		const result = await permissions.get(interaction.guild, permissionName);
 		if (result != null) {
 			await interaction.reply(
-				`権限名: ${permissionName}\nロール/メンバーID: ${result.group}`,
+				`権限名: ${permissionName}\nロール/メンバー: ${result}`,
 			);
 		} else {
 			await interaction.reply(
