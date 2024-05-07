@@ -41,7 +41,7 @@ export class PermissionManager {
 		);
 	}
 
-	async get(guild: Guild, name: string): Promise<Mentionable | null> {
+	async get(guild: Guild, name: string): Promise<Permission | null> {
 		const client = this.#client.application.id;
 		const connection = db.connection;
 		const collection = connection.collection<PermSchema>('perms');
@@ -50,10 +50,53 @@ export class PermissionManager {
 			return null;
 		}
 		const { group } = result;
-		return (
+		const mentionable =
 			guild.members.resolve(group) ??
 			guild.roles.resolve(group) ??
-			this.#client.users.resolve(group)
-		);
+			this.#client.users.resolve(group);
+		const mentions = mentionable != null ? [mentionable] : [];
+		return new Permission(this.#client, guild, name, mentions);
+	}
+}
+
+export class Permission {
+	readonly client: Client<true>;
+
+	readonly guild: Guild;
+
+	readonly name: string;
+
+	readonly #mentions: Mentionable[];
+
+	constructor(
+		client: Client<true>,
+		guild: Guild,
+		name: string,
+		mentions: Mentionable[],
+	) {
+		this.client = client;
+		this.guild = guild;
+		this.name = name;
+		this.#mentions = mentions;
+	}
+
+	hasMember(member: GuildMember): boolean {
+		if (member.guild.id != this.guild.id) {
+			return false;
+		}
+		for (const mentionable of this.#mentions) {
+			if (
+				(mentionable instanceof GuildMember && mentionable.id == member.id) ||
+				(mentionable instanceof Role && mentionable.members.has(member.id)) ||
+				(mentionable instanceof User && mentionable.id == member.user.id)
+			) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	toString() {
+		return this.#mentions.join(', ');
 	}
 }
