@@ -55,7 +55,14 @@ export class PermissionManager {
 			guild.roles.resolve(group) ??
 			this.#client.users.resolve(group);
 		const mentions = mentionable != null ? [mentionable] : [];
-		return new Permission(this.#client, guild, name, mentions);
+		return new Permission(this.#client, guild, name, mentions, this);
+	}
+
+	async remove(guild: Guild, name: string): Promise<void> {
+		const client = this.#client.application.id;
+		const connection = db.connection;
+		const collection = connection.collection<PermSchema>('perms');
+		await collection.deleteOne({ client, guild: guild.id, name });
 	}
 }
 
@@ -68,16 +75,20 @@ export class Permission {
 
 	readonly #mentions: Mentionable[];
 
+	readonly manager: PermissionManager;
+
 	constructor(
 		client: Client<true>,
 		guild: Guild,
 		name: string,
 		mentions: Mentionable[],
+		manager: PermissionManager,
 	) {
 		this.client = client;
 		this.guild = guild;
 		this.name = name;
 		this.#mentions = mentions;
+		this.manager = manager;
 	}
 
 	hasMember(member: GuildMember): boolean {
@@ -94,6 +105,10 @@ export class Permission {
 			}
 		}
 		return false;
+	}
+
+	async remove(): Promise<void> {
+		await this.manager.remove(this.guild, this.name);
 	}
 
 	toString() {

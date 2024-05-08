@@ -2,9 +2,10 @@ import { CompoundCommandBuilder } from 'core';
 import { feature as db } from 'db';
 import {
 	ApplicationCommandOptionChoiceData,
+	ChatInputCommandInteraction,
 	PermissionFlagsBits,
 } from 'discord.js';
-import { PermissionManager } from '../PermissionManager';
+import { Permission, PermissionManager } from '../PermissionManager';
 
 const builder = new CompoundCommandBuilder('perm', '権限の設定');
 
@@ -12,6 +13,41 @@ const choices: ApplicationCommandOptionChoiceData<string>[] = [];
 
 export function addChoice(choice: ApplicationCommandOptionChoiceData<string>) {
 	choices.push(choice);
+}
+
+async function informNotInGuild(interaction: ChatInputCommandInteraction) {
+	await interaction.reply({
+		content: 'このコマンドはサーバー内で使用してください！',
+		ephemeral: true,
+	});
+	return;
+}
+
+async function checkMemberIsAdministrator(
+	interaction: ChatInputCommandInteraction<'cached'>,
+): Promise<boolean> {
+	if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
+		await interaction.reply({
+			content: '権限がありません！',
+			ephemeral: true,
+		});
+		return false;
+	}
+	return true;
+}
+
+async function getPermissionOrInformNotFound(
+	interaction: ChatInputCommandInteraction<'cached'>,
+	permissionName: string,
+): Promise<Permission | null> {
+	const permissions = PermissionManager.forClient(interaction.client);
+	const result = await permissions.get(interaction.guild, permissionName);
+	if (result == null) {
+		await interaction.reply(
+			`権限名: ${permissionName}\nその名前の権限はありません!`,
+		);
+	}
+	return result;
 }
 
 builder
@@ -32,19 +68,10 @@ builder
 	.build(async (interaction, permissionName, group) => {
 		const connection = db.connection;
 		if (!interaction.inCachedGuild()) {
-			await interaction.reply({
-				content: 'このコマンドはサーバー内で使用してください！',
-				ephemeral: true,
-			});
+			await informNotInGuild(interaction);
 			return;
 		}
-		if (
-			!interaction.member.permissions.has(PermissionFlagsBits.Administrator)
-		) {
-			await interaction.reply({
-				content: '権限がありません！',
-				ephemeral: true,
-			});
+		if (!(await checkMemberIsAdministrator(interaction))) {
 			return;
 		}
 		const permissions = PermissionManager.forClient(interaction.client);
@@ -67,21 +94,43 @@ builder
 	.build(async (interaction, permissionName) => {
 		const connection = db.connection;
 		if (!interaction.inCachedGuild()) {
-			await interaction.reply({
-				content: 'このコマンドはサーバー内で使用してください！',
-				ephemeral: true,
-			});
+			await informNotInGuild(interaction);
 			return;
 		}
-		const permissions = PermissionManager.forClient(interaction.client);
-		const result = await permissions.get(interaction.guild, permissionName);
-		if (result != null) {
+		const permission = await getPermissionOrInformNotFound(
+			interaction,
+			permissionName,
+		);
+		if (permission != null) {
 			await interaction.reply(
-				`権限名: ${permissionName}\nロール/メンバー: ${result}`,
+				`権限名: ${permissionName}\nロール/メンバー: ${permission}`,
 			);
-		} else {
+		}
+	});
+
+builder
+	.subcommand('remove', '値の削除')
+	.addStringOption({
+		name: 'permission',
+		description: '権限名',
+		required: true,
+		async autocomplete(interaction) {
+			await interaction.respond(choices);
+		},
+	})
+	.build(async (interaction, permissionName) => {
+		if (!interaction.inCachedGuild()) {
+			await informNotInGuild(interaction);
+			return;
+		}
+		const permission = await getPermissionOrInformNotFound(
+			interaction,
+			permissionName,
+		);
+		if (permission != null) {
+			await permission.remove();
 			await interaction.reply(
-				`権限名: ${permissionName}\nその名前の権限はありません!`,
+				`権限を削除しました\n権限名: ${permissionName}\nロール/メンバー: ${permission}`,
 			);
 		}
 	});
