@@ -1,9 +1,18 @@
 import { CompoundCommandBuilder } from 'core';
 import { feature as db } from 'db';
-import { PermissionFlagsBits } from 'discord.js';
+import {
+	ApplicationCommandOptionChoiceData,
+	PermissionFlagsBits,
+} from 'discord.js';
 import { PermissionManager } from '../PermissionManager';
 
 const builder = new CompoundCommandBuilder('perm', '権限の設定');
+
+const choices: ApplicationCommandOptionChoiceData<string>[] = [];
+
+export function addChoice(choice: ApplicationCommandOptionChoiceData<string>) {
+	choices.push(choice);
+}
 
 builder
 	.subcommand('set', '値の更新')
@@ -12,12 +21,7 @@ builder
 		description: '権限名',
 		required: true,
 		async autocomplete(interaction) {
-			await interaction.respond([
-				{
-					name: '自動応答の設定',
-					value: 'replyCustomize',
-				},
-			]);
+			await interaction.respond(choices);
 		},
 	})
 	.addMentionableOption({
@@ -57,12 +61,7 @@ builder
 		description: '権限名',
 		required: true,
 		async autocomplete(interaction) {
-			await interaction.respond([
-				{
-					name: '自動応答の設定',
-					value: 'replyCustomize',
-				},
-			]);
+			await interaction.respond(choices);
 		},
 	})
 	.build(async (interaction, permissionName) => {

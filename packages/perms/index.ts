@@ -1,6 +1,6 @@
 import { CommandManager, Feature } from 'core';
 import { Client } from 'discord.js';
-import perm from './commands/perm';
+import perm, { addChoice } from './commands/perm';
 import { feature as db } from 'db';
 import { PermissionManager } from './PermissionManager';
 
@@ -19,6 +19,13 @@ class PermsFeature extends Feature {
 
 	onClientReady(client: Client<true>): void | PromiseLike<void> {
 		this.permissions = PermissionManager.forClient(client);
+	}
+
+	registerPermission(name: string, description: string) {
+		addChoice({
+			name: description,
+			value: name,
+		});
 	}
 }
 
