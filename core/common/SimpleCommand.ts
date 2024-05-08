@@ -1,6 +1,7 @@
 import {
 	APIApplicationCommandOptionChoice,
 	ApplicationCommandOptionWithChoicesAndAutocompleteMixin,
+	AutocompleteInteraction,
 	CacheType,
 	GuildMember,
 	Role,
@@ -29,7 +30,7 @@ interface SimpleCommandOptionData<T, Required extends boolean = boolean> {
 
 interface SimpleChoiceOptionData<T> {
 	choices?: APIApplicationCommandOptionChoice<T>[];
-	autocomplete?: boolean;
+	autocomplete?(interaction: AutocompleteInteraction): PromiseLike<void> | void;
 }
 
 interface SimpleRangeOptionData {
@@ -70,6 +71,8 @@ export interface Option<T = unknown, Required extends boolean = boolean> {
 	 * @param interaction コマンドのインタラクション
 	 */
 	get(interaction: ChatInputCommandInteraction): Value<T, Required>;
+
+	autocomplete?(interaction: AutocompleteInteraction): PromiseLike<void> | void;
 }
 
 function setChoices<T extends string | number>(
@@ -81,7 +84,7 @@ function setChoices<T extends string | number>(
 		option.addChoices(...choices);
 	}
 	if (autocomplete != null) {
-		option.setAutocomplete(autocomplete);
+		option.setAutocomplete(true);
 	}
 }
 
@@ -92,6 +95,10 @@ class IntegerOption<T extends number, Required extends boolean = boolean>
 
 	required: Required;
 
+	autocomplete?(
+		interaction: AutocompleteInteraction<CacheType>,
+	): void | PromiseLike<void>;
+
 	constructor(
 		builder: SharedSlashCommandOptions,
 		input: SimpleIntegerOptionData<T, Required>,
@@ -99,6 +106,7 @@ class IntegerOption<T extends number, Required extends boolean = boolean>
 		const { name, required } = input;
 		this.name = name;
 		this.required = required;
+		this.autocomplete = input.autocomplete;
 		builder.addIntegerOption((option) => {
 			option
 				.setName(name)
@@ -135,12 +143,17 @@ class StringOption<
 
 	required: Required;
 
+	autocomplete?(
+		interaction: AutocompleteInteraction<CacheType>,
+	): void | PromiseLike<void>;
+
 	constructor(
 		builder: SharedSlashCommandOptions,
 		input: SimpleStringOptionData<T, Required>,
 	) {
 		this.name = input.name;
 		this.required = input.required;
+		this.autocomplete = input.autocomplete;
 		builder.addStringOption((option) => {
 			option
 				.setName(input.name)
@@ -330,5 +343,18 @@ export class SimpleCommand<Options extends Option<unknown, boolean>[]>
 			option.get(interaction),
 		) as OptionValueMap<Options>;
 		await this.action(interaction, ...optionValues);
+	}
+
+	async autocomplete(
+		interaction: AutocompleteInteraction<CacheType>,
+	): Promise<void> {
+		const focusedValue = interaction.options.getFocused(true);
+		const focusedOption = this.builder.options.find(
+			(option) => option.name == focusedValue.name,
+		);
+		if (focusedOption == null) {
+			throw new TypeError(`Unknown option: '${focusedValue.name}'`);
+		}
+		focusedOption.autocomplete?.(interaction);
 	}
 }

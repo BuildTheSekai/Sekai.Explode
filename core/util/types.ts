@@ -1,4 +1,5 @@
 import {
+	AutocompleteInteraction,
 	ChatInputCommandInteraction,
 	Client,
 	RESTPostAPIChatInputApplicationCommandsJSONBody,
@@ -25,6 +26,11 @@ export interface Command {
 		interaction: ChatInputCommandInteraction,
 		client: Client<true>,
 	): Promise<void>;
+
+	/**
+	 * 自動補完の処理
+	 */
+	autocomplete?(interaction: AutocompleteInteraction): Promise<void>;
 }
 
 /**

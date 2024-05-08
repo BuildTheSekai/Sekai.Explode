@@ -1,7 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { strFormat, LANG } from '../util/languages';
-import { ChatInputCommandInteraction, Client } from 'discord.js';
+import {
+	AutocompleteInteraction,
+	ChatInputCommandInteraction,
+	Client,
+} from 'discord.js';
 import { Command } from '../util/types';
 
 export class CommandManager {
@@ -24,7 +28,9 @@ export class CommandManager {
 		await client.application.commands.set(commands);
 		client.on('interactionCreate', (interaction) => {
 			if (interaction.isChatInputCommand()) {
-				this.#handleInteraction(interaction, client);
+				this.#handleChatInputCommand(interaction, client);
+			} else if (interaction.isAutocomplete()) {
+				this.#handleAutocomplete(interaction);
 			}
 		});
 	}
@@ -60,22 +66,26 @@ export class CommandManager {
 		}
 	}
 
+	#get(name: string): Command {
+		const command = this.#commands.get(name);
+		if (!command) {
+			throw new Error(
+				strFormat(LANG.discordbot.interactionCreate.unsupportedCommandError, [
+					name,
+				]),
+			);
+		}
+		return command;
+	}
+
 	/**
-	 * コマンドの処理を行う。
+	 * チャット入力コマンドの処理を行う。
 	 */
-	async #handleInteraction(
+	async #handleChatInputCommand(
 		interaction: ChatInputCommandInteraction,
 		client: Client<true>,
 	) {
-		const command = this.#commands.get(interaction.commandName);
-		if (!command) {
-			console.error(
-				strFormat(LANG.discordbot.interactionCreate.unsupportedCommandError, [
-					interaction.commandName,
-				]),
-			);
-			return;
-		}
+		const command = this.#get(interaction.commandName);
 		try {
 			await command.execute(interaction, client);
 		} catch (error) {
@@ -92,5 +102,10 @@ export class CommandManager {
 			}
 			throw error;
 		}
+	}
+
+	async #handleAutocomplete(interaction: AutocompleteInteraction) {
+		const command = this.#get(interaction.commandName);
+		await command.autocomplete?.(interaction);
 	}
 }

@@ -11,6 +11,14 @@ builder
 		name: 'permission',
 		description: '権限名',
 		required: true,
+		async autocomplete(interaction) {
+			await interaction.respond([
+				{
+					name: '自動応答の設定',
+					value: 'replyCustomize',
+				},
+			]);
+		},
 	})
 	.addMentionableOption({
 		name: 'group',
@@ -48,6 +56,14 @@ builder
 		name: 'permission',
 		description: '権限名',
 		required: true,
+		async autocomplete(interaction) {
+			await interaction.respond([
+				{
+					name: '自動応答の設定',
+					value: 'replyCustomize',
+				},
+			]);
+		},
 	})
 	.build(async (interaction, permissionName) => {
 		const connection = db.connection;
