@@ -23,7 +23,7 @@ class PermsFeature extends Feature {
 
 	registerPermission(name: string, description: string) {
 		addChoice({
-			name: description,
+			name: `${name} (${description})`,
 			value: name,
 		});
 	}
