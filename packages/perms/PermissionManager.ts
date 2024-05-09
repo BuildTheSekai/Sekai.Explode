@@ -30,7 +30,11 @@ export class PermissionManager {
 		this.#client = client;
 	}
 
-	async set(guild: Guild, name: string, group: Mentionable): Promise<void> {
+	async set(
+		guild: Guild,
+		name: string,
+		group: Mentionable,
+	): Promise<Permission> {
 		const client = this.#client.application.id;
 		const connection = db.connection;
 		const collection = connection.collection<PermSchema>('perms');
@@ -39,6 +43,7 @@ export class PermissionManager {
 			{ client, guild: guildId, name },
 			{ client, guild: guildId, name, group: group.id },
 		);
+		return new Permission(this.#client, guild, name, [group], this);
 	}
 
 	async get(guild: Guild, name: string): Promise<Permission | null> {
@@ -73,7 +78,7 @@ export class Permission {
 
 	readonly name: string;
 
-	readonly #mentions: Mentionable[];
+	readonly group: readonly Mentionable[];
 
 	readonly manager: PermissionManager;
 
@@ -81,13 +86,13 @@ export class Permission {
 		client: Client<true>,
 		guild: Guild,
 		name: string,
-		mentions: Mentionable[],
+		group: Mentionable[],
 		manager: PermissionManager,
 	) {
 		this.client = client;
 		this.guild = guild;
 		this.name = name;
-		this.#mentions = mentions;
+		this.group = group;
 		this.manager = manager;
 	}
 
@@ -95,7 +100,7 @@ export class Permission {
 		if (member.guild.id != this.guild.id) {
 			return false;
 		}
-		for (const mentionable of this.#mentions) {
+		for (const mentionable of this.group) {
 			if (
 				(mentionable instanceof GuildMember && mentionable.id == member.id) ||
 				(mentionable instanceof Role && mentionable.members.has(member.id)) ||
@@ -112,6 +117,6 @@ export class Permission {
 	}
 
 	toString() {
-		return this.#mentions.join(', ');
+		return this.group.join(', ');
 	}
 }

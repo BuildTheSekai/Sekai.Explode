@@ -1,6 +1,7 @@
 import { CompoundCommandBuilder } from 'core';
 import { feature as db } from 'db';
 import {
+	APIEmbed,
 	ApplicationCommandOptionChoiceData,
 	ChatInputCommandInteraction,
 	PermissionFlagsBits,
@@ -50,6 +51,23 @@ async function getPermissionOrInformNotFound(
 	return result;
 }
 
+function permissionToEmbed(permission: Permission): APIEmbed {
+	return {
+		color: 0x88ff44,
+		title: '権限情報',
+		fields: [
+			{
+				name: '権限名',
+				value: permission.name,
+			},
+			{
+				name: 'ロール/メンバー',
+				value: permission.group.join(', '),
+			},
+		],
+	};
+}
+
 builder
 	.subcommand('set', '値の更新')
 	.addStringOption({
@@ -75,10 +93,15 @@ builder
 			return;
 		}
 		const permissions = PermissionManager.forClient(interaction.client);
-		await permissions.set(interaction.guild, permissionName, group);
-		await interaction.reply(
-			`権限を追加しました!\n権限名: ${permissionName}\nロール/メンバー: ${group}`,
+		const permission = await permissions.set(
+			interaction.guild,
+			permissionName,
+			group,
 		);
+		await interaction.reply({
+			content: '権限を追加しました!',
+			embeds: [permissionToEmbed(permission)],
+		});
 	});
 
 builder
@@ -102,9 +125,9 @@ builder
 			permissionName,
 		);
 		if (permission != null) {
-			await interaction.reply(
-				`権限名: ${permissionName}\nロール/メンバー: ${permission}`,
-			);
+			await interaction.reply({
+				embeds: [permissionToEmbed(permission)],
+			});
 		}
 	});
 
@@ -129,9 +152,10 @@ builder
 		);
 		if (permission != null) {
 			await permission.remove();
-			await interaction.reply(
-				`権限を削除しました\n権限名: ${permissionName}\nロール/メンバー: ${permission}`,
-			);
+			await interaction.reply({
+				content: '権限を削除しました',
+				embeds: [permissionToEmbed(permission)],
+			});
 		}
 	});
 
