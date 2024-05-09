@@ -166,13 +166,9 @@ module.exports = {
 async function checkPermission(
 	interaction: ChatInputCommandInteraction<'cached'>,
 ) {
-	const replyCustomizePermission = await perms.permissions?.get(
-		interaction.guild,
-		'replyCustomize',
-	);
 	if (
 		interaction.member != null &&
-		replyCustomizePermission?.hasMember(interaction.member)
+		(await perms.hasPermission(interaction.member, 'replyCustomize'))
 	) {
 		return true;
 	}

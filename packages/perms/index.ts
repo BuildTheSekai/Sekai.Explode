@@ -1,5 +1,5 @@
 import { CommandManager, Feature } from 'core';
-import { Client } from 'discord.js';
+import { Client, Guild, GuildMember } from 'discord.js';
 import perm, { addChoice } from './commands/perm';
 import { feature as db } from 'db';
 import { PermissionManager } from './PermissionManager';
@@ -26,6 +26,11 @@ class PermsFeature extends Feature {
 			name: `${name} (${description})`,
 			value: name,
 		});
+	}
+
+	async hasPermission(member: GuildMember, name: string): Promise<boolean> {
+		const permission = await this.permissions?.get(member.guild, name);
+		return permission != null && permission.hasMember(member);
 	}
 }
 
