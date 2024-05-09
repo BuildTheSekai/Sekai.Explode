@@ -2,6 +2,12 @@ import assert from 'assert';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { LANG, Config, Command, Pager } from 'core';
 import { ClientMessageHandler, ReplyPattern } from '../util/messages';
+import { feature as perms } from 'perms';
+
+perms.registerPermission(
+	'replyCustomize',
+	LANG.commands.reply.replyCustomizePermission,
+);
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -62,11 +68,11 @@ module.exports = {
 		),
 
 	async execute(interaction) {
-		const guild = interaction.guild;
-		if (guild == null) {
+		if (!interaction.inCachedGuild()) {
 			await interaction.reply(LANG.commands.reply.notInGuildError);
 			return;
 		}
+		const guild = interaction.guild;
 
 		const subcommand = interaction.options.getSubcommand();
 		const clientMessageHandler = ClientMessageHandler.instance;
@@ -157,7 +163,15 @@ module.exports = {
 /**
  * 使う権限があるかをチェックする。
  */
-async function checkPermission(interaction: ChatInputCommandInteraction) {
+async function checkPermission(
+	interaction: ChatInputCommandInteraction<'cached'>,
+) {
+	if (
+		interaction.member != null &&
+		(await perms.hasPermission(interaction.member, 'replyCustomize'))
+	) {
+		return true;
+	}
 	if (!Config.replyCustomizeAllowedUsers?.includes(interaction.user.id)) {
 		await interaction.reply({
 			content: LANG.commands.reply.permissionError,

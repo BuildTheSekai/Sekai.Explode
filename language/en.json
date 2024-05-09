@@ -110,7 +110,9 @@
 			"result": "Result:",
 			"notPlayableError": "Join the VC to execute the command!",
 			"playerTrack": "${title} (${duration})",
-			"noTracksPlayed": "There are no tracks played!"
+			"noTracksPlayed": "There are no tracks played!",
+			"useCommandInGuild": "Use this command in a server!",
+			"noPermission": "You have not permission to do it!"
 		},
 		"defaultValues": {
 			"graphLabel": "value"
@@ -539,6 +541,43 @@
 			"playerPaused": "Paused the player!",
 			"pauseFailed": "Failed to pause the player"
 		},
+		"perm": {
+			"name": "perm",
+			"description": "Permission configuration",
+			"subcommands": {
+				"set": {
+					"name": "set",
+					"description": "Updates a value"
+				},
+				"get": {
+					"name": "get",
+					"description": "Gets a value"
+				},
+				"remove": {
+					"name": "remove",
+					"description": "Removes a value"
+				}
+			},
+			"options": {
+				"permission": {
+					"name": "permission",
+					"description": "Permission name"
+				},
+				"group": {
+					"name": "group",
+					"description": "Target role or user"
+				}
+			},
+			"noSuchPermission": [
+				"Permission name: ${0}",
+				"There is not such permission!"
+			],
+			"permissionInformation": "Permission info",
+			"permissionName": "Permission name",
+			"permissionGroup": "Roles/Members",
+			"permissionSet": "Added a permission!",
+			"permissionRemoved": "Removed a permission"
+		},
 		"pieChart": {
 			"name": "piechart",
 			"description": "Generates a pie chart.",
@@ -670,6 +709,7 @@
 					"emptyMessage": "メッセージが設定されていません"
 				}
 			},
+			"replyCustomizePermission": "customizations of automatic replies",
 			"notInGuildError": "This commands must be used in a server!",
 			"permissionError": "You have not permission to use this command!"
 		},

@@ -1,7 +1,9 @@
 import {
+	AutocompleteInteraction,
 	CacheType,
 	ChatInputCommandInteraction,
 	Client,
+	CommandInteractionOptionResolver,
 	SlashCommandBuilder,
 	SlashCommandSubcommandBuilder,
 } from 'discord.js';
@@ -110,15 +112,30 @@ export class CompoundCommand implements Command {
 		interaction: ChatInputCommandInteraction<CacheType>,
 		client: Client<true>,
 	): Promise<void> {
+		const subcommand = this.getSubcommand(interaction);
+		subcommand.execute(interaction);
+	}
+
+	async autocomplete(
+		interaction: AutocompleteInteraction<CacheType>,
+	): Promise<void> {
+		const subcommand = this.getSubcommand(interaction);
+		subcommand.autocomplete(interaction);
+	}
+
+	getSubcommand(interaction: {
+		options: Pick<CommandInteractionOptionResolver, 'getSubcommand'>;
+	}) {
 		const subcommandName = interaction.options.getSubcommand(true);
 		const subcommand = this.#subcommands.get(subcommandName);
 		if (subcommand == null) {
-			await interaction.reply({
-				ephemeral: true,
-				content: 'Invalid subcommand: ' + subcommandName,
-			});
-			return;
+			const subcommands = Array.from(this.#subcommands.keys())
+				.map((s) => `'${s}'`)
+				.join(', ');
+			throw new TypeError(
+				`Invalid subcommand: '${subcommandName}', subcommands: ${subcommands}`,
+			);
 		}
-		subcommand.execute(interaction);
+		return subcommand;
 	}
 }

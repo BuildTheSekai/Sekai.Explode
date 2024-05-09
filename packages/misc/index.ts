@@ -4,11 +4,14 @@ import path from 'path';
 
 import { Feature, CommandManager, Config } from 'core';
 import { Client } from 'discord.js';
+import { feature as perm } from 'perms';
 
 class MiscFeature extends Feature {
 	name = 'misc';
 
 	enabled = Config.features?.misc ?? true;
+
+	dependencies = [perm];
 
 	messageHandler?: ClientMessageHandler;
 

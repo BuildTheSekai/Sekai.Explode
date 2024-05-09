@@ -110,7 +110,9 @@
 			"result": "結果:",
 			"notPlayableError": "えー実行したくないなぁー…だってVCに君が居ないんだもん…",
 			"playerTrack": "${title} (${duration})",
-			"noTracksPlayed": "再生されている曲がありません！"
+			"noTracksPlayed": "再生されている曲がありません！",
+			"useCommandInGuild": "このコマンドはサーバー内で使用してください！",
+			"noPermission": "権限がありません！"
 		},
 		"defaultValues": {
 			"graphLabel": "value"
@@ -539,6 +541,40 @@
 			"playerPaused": "音楽を一時停止しました！",
 			"pauseFailed": "一時停止できませんでした"
 		},
+		"perm": {
+			"name": "perm",
+			"description": "権限の設定",
+			"subcommands": {
+				"set": {
+					"name": "set",
+					"description": "値の更新"
+				},
+				"get": {
+					"name": "get",
+					"description": "値の取得"
+				},
+				"remove": {
+					"name": "remove",
+					"description": "値の削除"
+				}
+			},
+			"options": {
+				"permission": {
+					"name": "permission",
+					"description": "権限名"
+				},
+				"group": {
+					"name": "group",
+					"description": "対象のロールまたはユーザー"
+				}
+			},
+			"noSuchPermission": ["権限名: ${0}", "その名前の権限はありません!"],
+			"permissionInformation": "権限情報",
+			"permissionName": "権限名",
+			"permissionGroup": "ロール/メンバー",
+			"permissionSet": "権限を追加しました!",
+			"permissionRemoved": "権限を削除しました"
+		},
 		"pieChart": {
 			"name": "piechart",
 			"description": "円グラフを生成します。",
@@ -670,6 +706,7 @@
 					"emptyMessage": "メッセージが設定されていません"
 				}
 			},
+			"replyCustomizePermission": "自動応答の設定",
 			"notInGuildError": "このコマンドはサーバー内でのみ使用できます！",
 			"permissionError": "このコマンドを使用する権限がありません！"
 		},
