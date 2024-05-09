@@ -2,6 +2,7 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/b7fc33791d3233660e7c02524ace22c31b66e890.svg "Repobeats analytics image")
 
+[简体中文](README_CN.md)
 
 ## What's this?
 discord.js@v14を使用した、多機能botです。
