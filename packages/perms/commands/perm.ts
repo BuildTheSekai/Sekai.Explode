@@ -1,4 +1,4 @@
-import { CompoundCommandBuilder } from 'core';
+import { CompoundCommandBuilder, LANG, strFormat } from 'core';
 import { feature as db } from 'db';
 import {
 	APIEmbed,
@@ -8,7 +8,10 @@ import {
 } from 'discord.js';
 import { Permission, PermissionManager } from '../PermissionManager';
 
-const builder = new CompoundCommandBuilder('perm', '権限の設定');
+const builder = new CompoundCommandBuilder(
+	LANG.commands.perm.name,
+	LANG.commands.perm.description,
+);
 
 const choices: ApplicationCommandOptionChoiceData<string>[] = [];
 
@@ -18,7 +21,7 @@ export function addChoice(choice: ApplicationCommandOptionChoiceData<string>) {
 
 async function informNotInGuild(interaction: ChatInputCommandInteraction) {
 	await interaction.reply({
-		content: 'このコマンドはサーバー内で使用してください！',
+		content: LANG.common.message.useCommandInGuild,
 		ephemeral: true,
 	});
 	return;
@@ -29,7 +32,7 @@ async function checkMemberIsAdministrator(
 ): Promise<boolean> {
 	if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
 		await interaction.reply({
-			content: '権限がありません！',
+			content: LANG.common.message.noPermission,
 			ephemeral: true,
 		});
 		return false;
@@ -45,7 +48,9 @@ async function getPermissionOrInformNotFound(
 	const result = await permissions.get(interaction.guild, permissionName);
 	if (result == null) {
 		await interaction.reply(
-			`権限名: ${permissionName}\nその名前の権限はありません!`,
+			LANG.commands.perm.noSuchPermission
+				.map((s) => strFormat(s, [permissionName]))
+				.join('\n'),
 		);
 	}
 	return result;
@@ -54,14 +59,14 @@ async function getPermissionOrInformNotFound(
 function permissionToEmbed(permission: Permission): APIEmbed {
 	return {
 		color: 0x88ff44,
-		title: '権限情報',
+		title: LANG.commands.perm.permissionInformation,
 		fields: [
 			{
-				name: '権限名',
+				name: LANG.commands.perm.permissionName,
 				value: permission.name,
 			},
 			{
-				name: 'ロール/メンバー',
+				name: LANG.commands.perm.permissionGroup,
 				value: permission.group.join(', '),
 			},
 		],
@@ -69,18 +74,21 @@ function permissionToEmbed(permission: Permission): APIEmbed {
 }
 
 builder
-	.subcommand('set', '値の更新')
+	.subcommand(
+		LANG.commands.perm.subcommands.set.name,
+		LANG.commands.perm.subcommands.set.description,
+	)
 	.addStringOption({
-		name: 'permission',
-		description: '権限名',
+		name: LANG.commands.perm.options.permission.name,
+		description: LANG.commands.perm.options.permission.description,
 		required: true,
 		async autocomplete(interaction) {
 			await interaction.respond(choices);
 		},
 	})
 	.addMentionableOption({
-		name: 'group',
-		description: '対象のロールまたはユーザー',
+		name: LANG.commands.perm.options.group.name,
+		description: LANG.commands.perm.options.group.description,
 		required: true,
 	})
 	.build(async (interaction, permissionName, group) => {
@@ -99,16 +107,19 @@ builder
 			group,
 		);
 		await interaction.reply({
-			content: '権限を追加しました!',
+			content: LANG.commands.perm.permissionSet,
 			embeds: [permissionToEmbed(permission)],
 		});
 	});
 
 builder
-	.subcommand('get', '値の取得')
+	.subcommand(
+		LANG.commands.perm.subcommands.get.name,
+		LANG.commands.perm.subcommands.get.description,
+	)
 	.addStringOption({
-		name: 'permission',
-		description: '権限名',
+		name: LANG.commands.perm.options.permission.name,
+		description: LANG.commands.perm.options.permission.description,
 		required: true,
 		async autocomplete(interaction) {
 			await interaction.respond(choices);
@@ -132,10 +143,13 @@ builder
 	});
 
 builder
-	.subcommand('remove', '値の削除')
+	.subcommand(
+		LANG.commands.perm.subcommands.remove.name,
+		LANG.commands.perm.subcommands.remove.description,
+	)
 	.addStringOption({
-		name: 'permission',
-		description: '権限名',
+		name: LANG.commands.perm.options.permission.name,
+		description: LANG.commands.perm.options.permission.description,
 		required: true,
 		async autocomplete(interaction) {
 			await interaction.respond(choices);
@@ -153,7 +167,7 @@ builder
 		if (permission != null) {
 			await permission.remove();
 			await interaction.reply({
-				content: '権限を削除しました',
+				content: LANG.commands.perm.permissionRemoved,
 				embeds: [permissionToEmbed(permission)],
 			});
 		}

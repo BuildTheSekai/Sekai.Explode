@@ -4,7 +4,10 @@ import { LANG, Config, Command, Pager } from 'core';
 import { ClientMessageHandler, ReplyPattern } from '../util/messages';
 import { feature as perms } from 'perms';
 
-perms.registerPermission('replyCustomize', '自動応答の設定');
+perms.registerPermission(
+	'replyCustomize',
+	LANG.commands.reply.replyCustomizePermission,
+);
 
 module.exports = {
 	data: new SlashCommandBuilder()
