@@ -50,7 +50,8 @@ module.exports = {
         .setName('hello')
         .setDescription('Hello World!'),
     execute: async function (interaction) {
-        await interaction.reply('Hello World!') //処理を記述
+	// 在这里开始你的代码 ↓
+        await interaction.reply('Hello World!')
     }
 };
 ```
@@ -75,7 +76,8 @@ class ExampleFeature {
                 .setName('hello')
                 .setDescription('Hello World!'),
             execute: async function (interaction) {
-                await interaction.reply('Hello World!') //処理を記述
+                // 在这里开始你的代码 ↓
+		await interaction.reply('Hello World!') 
             }
         });
 	}
