@@ -41,7 +41,7 @@
 #### 向```misc```软件包添加
 只需要在```packages/misc/commands```目录下创建你的文件，启动时会自动加载。
 
-##### 例:
+**例:**
 ```js
 const { SlashCommandBuilder } = require('discord.js');
 
@@ -63,7 +63,7 @@ npm init -w packages/example
 
 在入口点文件（如 ```index.js```）中添加命令并导出功能。
 
-#### 例:
+**例:**
 ```js
 const { CommandManager } = require('../../internal/commands');
 const upload = require('./upload');
