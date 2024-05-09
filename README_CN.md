@@ -32,8 +32,8 @@
 2. 运行 `npm install` 安装依赖项。
 3. 复制 `config.json.example` 并重命名为 `config.json`。
 4. 编辑 `config.json`。
-6. 使用 `npm start` 或 `pm2 start npm -- start` 启动。
-7. 大功告成！
+5. 使用 `npm start` 或 `pm2 start npm -- start` 启动。
+6. 大功告成！
 
 
 ### 注册命令
