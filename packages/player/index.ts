@@ -37,6 +37,7 @@ class PlayerFeature extends Feature {
 			require('./commands/skip'),
 			require('./commands/stop'),
 			require('./commands/volume'),
+			require('./commands/loop'),
 		]);
 
 		player.events.on('playerStart', (queue, track) => {
