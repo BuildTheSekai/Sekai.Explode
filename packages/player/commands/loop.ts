@@ -3,6 +3,8 @@ import { LANG } from 'core';
 import { PlayerCommand } from '../PlayerCommand';
 import { QueueRepeatMode } from 'discord-player';
 
+console.log('CALLED LOOP');
+
 module.exports = new PlayerCommand(
 	new SlashCommandBuilder()
 		.setName(LANG.commands.loop.name)
