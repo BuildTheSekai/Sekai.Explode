@@ -434,6 +434,15 @@
 			},
 			"defaultTitle": "${0}'s graph"
 		},
+		"loop": {
+			"name": "loop",
+			"description": "音楽をループ再生します。",
+			"mode": {
+				"track": "現在の曲をループ再生します!",
+				"queue": "キュー内の曲をループ再生します!",
+				"off": "ループ再生をオフにしました!"
+			}
+		},
 		"mcSrvlookup": {
 			"name": "mcsrv_record",
 			"description": "Lookup SRV Record",
