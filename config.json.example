@@ -1,6 +1,15 @@
 {
 	"kairun": 8264,
 	"token": "YourDiscordBotTokenHere",
+	"features": {
+		"admin": true,
+		"cdn": true,
+		"images": true,
+		"misc": true,
+		"player": true,
+		"templink": true,
+		"web-api": true
+	},
 	"tempLinkSrvToken": "Tl0_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 	"tempLinkSrvPostURL": "https://link.example.com/api/links",
 	"linkDomain": "link.yourdomain.com",
@@ -16,6 +25,7 @@
 	"AdminRoleID": "00000000000",
 	"AdminUserIDs": ["1063527758292070591", "1126422758696427552"],
 	"replyCustomizeAllowedUsers": ["00000000000","16326412825651210244096"],
+	"database": "mongo",
 	"mongoDBhost": "127.0.0.1",
 	"mongoDBport": "27017",
 	"mongoDBuser": "admin",

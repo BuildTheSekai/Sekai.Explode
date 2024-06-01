@@ -1,19 +1,27 @@
 import assert from 'assert';
 import { GuildQueue, Player } from 'discord-player';
-import { LANG, strFormat } from '../../util/languages';
-import { CommandManager } from '../../internal/commands';
+import { LANG, strFormat, CommandManager, Feature, Config } from 'core';
 import {
 	restoreQueues,
 	saveQueue,
 	getDuration,
 	deleteSavedQueues,
 } from './players';
-import { Feature } from '../../util/types';
 import { Client } from 'discord.js';
+import * as db from 'db';
 
-class PlayerFeature implements Feature {
-	/** @type {Player | null} */
+class PlayerFeature extends Feature {
 	#player: Player | null = null;
+
+	name = 'player';
+
+	enabled = Config.features?.player ?? true;
+
+	dependencies = [db.feature];
+
+	private deletePromise?: Promise<void>;
+
+	private alive = true;
 
 	onLoad(client: Client<boolean>) {
 		console.log(LANG.discordbot.main.playerLoading);
@@ -29,6 +37,7 @@ class PlayerFeature implements Feature {
 			require('./commands/skip'),
 			require('./commands/stop'),
 			require('./commands/volume'),
+			require('./commands/loop'),
 		]);
 
 		player.events.on('playerStart', (queue, track) => {
@@ -61,12 +70,16 @@ class PlayerFeature implements Feature {
 			});
 		});
 
-		player.events.on('playerFinish', (queue) =>
-			deleteSavedQueues(queue.guild.id),
-		);
-		player.events.on('queueDelete', (queue) =>
-			deleteSavedQueues(queue.guild.id),
-		);
+		player.events.on('playerFinish', (queue) => {
+			if (this.alive) {
+				this.deletePromise = deleteSavedQueues(queue.guild.id);
+			}
+		});
+		player.events.on('queueDelete', (queue) => {
+			if (this.alive) {
+				this.deletePromise = deleteSavedQueues(queue.guild.id);
+			}
+		});
 
 		player.on('error', () => console.log(LANG.discordbot.playerError.message));
 	}
@@ -84,6 +97,8 @@ class PlayerFeature implements Feature {
 			console.log(guildId);
 			await saveQueue(queue as GuildQueue<any>);
 		}
+		await this.deletePromise;
+		this.alive = false;
 		await player.destroy();
 	}
 }

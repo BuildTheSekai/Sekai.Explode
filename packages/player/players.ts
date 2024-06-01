@@ -14,12 +14,11 @@ import {
 	TrackLike,
 	GuildNodeCreateOptions,
 } from 'discord-player';
-import Timespan from '../../util/timespan';
-import mongodb from '../../internal/mongodb';
-import { Collection } from 'mongoose';
+import { Timespan } from 'core';
+import { Document, Collection, feature as db } from 'db';
 
 /** volumes コレクションのドキュメント */
-interface VolumeSchema {
+interface VolumeSchema extends Document {
 	/** ギルド ID */
 	guild: string;
 
@@ -28,7 +27,7 @@ interface VolumeSchema {
 }
 
 /** guild_queue コレクションのドキュメント */
-interface GuildQueueSchema {
+interface GuildQueueSchema extends Document {
 	/** ギルド ID */
 	_id: string;
 
@@ -55,7 +54,7 @@ interface GuildQueueSchema {
 }
 
 /** guild_queue_tracks コレクションのドキュメント */
-interface GuildQueueTrackSchema {
+interface GuildQueueTrackSchema extends Document {
 	/** ギルド ID */
 	guild: string;
 
@@ -198,17 +197,13 @@ const functions = {
 	 * @param volume 音量
 	 */
 	async saveVolumeSetting(guildId: string, volume: number) {
-		const volumeCollection =
-			mongodb.connection.collection<VolumeSchema>('volumes');
+		const volumeCollection = db.connection.collection<VolumeSchema>('volumes');
 		await volumeCollection.updateOne(
 			{ guild: guildId },
 			{
-				$set: {
-					guild: guildId,
-					volume: volume,
-				},
+				guild: guildId,
+				volume: volume,
 			},
-			{ upsert: true },
 		);
 	},
 
@@ -218,8 +213,7 @@ const functions = {
 	 * @returns 音量
 	 */
 	async loadVolumeSetting(guildId: string): Promise<number | undefined> {
-		const volumeCollection =
-			mongodb.connection.collection<VolumeSchema>('volumes');
+		const volumeCollection = db.connection.collection<VolumeSchema>('volumes');
 		const result = await volumeCollection.findOne({ guild: guildId });
 		if (result != null) {
 			return result.volume;
@@ -268,6 +262,7 @@ const functions = {
 		};
 	},
 
+	// FIXME: LokiJS だと動かない
 	/**
 	 * 現在のキューの状態をデータベースに保存する。
 	 * @param queue キュー
@@ -277,7 +272,7 @@ const functions = {
 		const metadata = queue.metadata;
 
 		const guildQueueCollection =
-			mongodb.connection.collection<GuildQueueSchema>('guild_queues');
+			db.connection.collection<GuildQueueSchema>('guild_queues');
 		await guildQueueCollection.deleteOne({ _id: guild });
 		await guildQueueCollection.insertOne({
 			_id: guild,
@@ -291,18 +286,17 @@ const functions = {
 		});
 
 		const guildQueueTrackCollection =
-			mongodb.connection.collection<GuildQueueTrackSchema>(
-				'guild_queue_tracks',
-			);
+			db.connection.collection<GuildQueueTrackSchema>('guild_queue_tracks');
 		const tracks = queue.tracks.toArray();
 		await guildQueueTrackCollection.deleteMany({ guild });
-		await guildQueueTrackCollection.insertMany(
-			tracks.map((track, index) => ({
-				guild,
-				index,
-				track: track.serialize(),
-			})),
-		);
+		const trackDocuments = tracks.map((track, index) => ({
+			guild,
+			index,
+			track: track.serialize(),
+		}));
+		if (trackDocuments.length > 0) {
+			await guildQueueTrackCollection.insertMany(trackDocuments);
+		}
 	},
 
 	/**
@@ -311,15 +305,12 @@ const functions = {
 	 */
 	async deleteSavedQueues(...guilds: string[]) {
 		const guildQueueCollection =
-			mongodb.connection.collection<GuildQueueSchema>('guild_queues');
+			db.connection.collection<GuildQueueSchema>('guild_queues');
 		await guildQueueCollection.deleteMany({
 			_id: { $in: guilds },
 		});
-		/** @type {import("mongoose").Collection<GuildQueueTrackSchema>} */
-		const guildQueueTrackCollection =
-			mongodb.connection.collection<GuildQueueTrackSchema>(
-				'guild_queue_tracks',
-			);
+		const guildQueueTrackCollection: Collection<GuildQueueTrackSchema> =
+			db.connection.collection<GuildQueueTrackSchema>('guild_queue_tracks');
 		await guildQueueTrackCollection.deleteMany({
 			guild: { $in: guilds },
 		});
@@ -331,7 +322,7 @@ const functions = {
 	 */
 	async restoreQueues(player: Player) {
 		const guildQueueCollection =
-			mongodb.connection.collection<GuildQueueSchema>('guild_queues');
+			db.connection.collection<GuildQueueSchema>('guild_queues');
 		const guildQueueDocuments = guildQueueCollection.find({});
 		const guildsToDeleteQueues = [];
 		for await (const guildQueueDocument of guildQueueDocuments) {
@@ -350,9 +341,7 @@ const functions = {
 	 */
 	async getSavedTracks(player: Player, guild: string) {
 		const guildQueueTrackCollection =
-			mongodb.connection.collection<GuildQueueTrackSchema>(
-				'guild_queue_tracks',
-			);
+			db.connection.collection<GuildQueueTrackSchema>('guild_queue_tracks');
 		const guildQueueTrackDocuments = guildQueueTrackCollection.find({ guild });
 		const result = [];
 		for await (const { index, track } of guildQueueTrackDocuments) {

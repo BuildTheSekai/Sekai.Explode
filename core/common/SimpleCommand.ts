@@ -1,0 +1,360 @@
+import {
+	APIApplicationCommandOptionChoice,
+	ApplicationCommandOptionWithChoicesAndAutocompleteMixin,
+	AutocompleteInteraction,
+	CacheType,
+	GuildMember,
+	Role,
+	SharedSlashCommandOptions,
+	SlashCommandSubcommandBuilder,
+	User,
+} from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
+import { Command } from '../util/types';
+
+type Value<T, Required extends boolean = boolean> = Required extends true
+	? T
+	: T | undefined;
+
+export type OptionValueMap<O extends Option<unknown>[]> = {
+	[I in keyof O]: O[I] extends Option<infer T, infer Required>
+		? Value<T, Required>
+		: never;
+};
+
+interface SimpleCommandOptionData<T, Required extends boolean = boolean> {
+	name: string;
+	description: string;
+	required: Required;
+}
+
+interface SimpleChoiceOptionData<T> {
+	choices?: APIApplicationCommandOptionChoice<T>[];
+	autocomplete?(interaction: AutocompleteInteraction): PromiseLike<void> | void;
+}
+
+interface SimpleRangeOptionData {
+	max_value?: number;
+	min_value?: number;
+}
+
+interface SimpleIntegerOptionData<
+	T extends number = number,
+	Required extends boolean = boolean,
+> extends SimpleCommandOptionData<T, Required>,
+		SimpleRangeOptionData,
+		SimpleChoiceOptionData<T> {}
+
+interface SimpleStringOptionData<
+	T extends string = string,
+	Required extends boolean = boolean,
+> extends SimpleCommandOptionData<T, Required>,
+		SimpleChoiceOptionData<T> {
+	max_length?: number;
+	min_length?: number;
+}
+
+type Mentionable = GuildMember | Role | User;
+
+type SimpleMentionableOptionData<Required extends boolean = boolean> =
+	SimpleCommandOptionData<Mentionable, Required>;
+
+export interface Option<T = unknown, Required extends boolean = boolean> {
+	/** オプションの名前 */
+	name: string;
+
+	/** 必須のオプションか */
+	required: Required;
+
+	/**
+	 * オプションの値を取得する。
+	 * @param interaction コマンドのインタラクション
+	 */
+	get(interaction: ChatInputCommandInteraction): Value<T, Required>;
+
+	autocomplete?(interaction: AutocompleteInteraction): PromiseLike<void> | void;
+}
+
+function setChoices<T extends string | number>(
+	option: ApplicationCommandOptionWithChoicesAndAutocompleteMixin<T>,
+	input: SimpleChoiceOptionData<T>,
+) {
+	const { choices, autocomplete } = input;
+	if (choices != null) {
+		option.addChoices(...choices);
+	}
+	if (autocomplete != null) {
+		option.setAutocomplete(true);
+	}
+}
+
+class IntegerOption<T extends number, Required extends boolean = boolean>
+	implements Option<T, Required>
+{
+	name: string;
+
+	required: Required;
+
+	autocomplete?(
+		interaction: AutocompleteInteraction<CacheType>,
+	): void | PromiseLike<void>;
+
+	constructor(
+		builder: SharedSlashCommandOptions,
+		input: SimpleIntegerOptionData<T, Required>,
+	) {
+		const { name, required } = input;
+		this.name = name;
+		this.required = required;
+		this.autocomplete = input.autocomplete;
+		builder.addIntegerOption((option) => {
+			option
+				.setName(name)
+				.setDescription(input.description)
+				.setRequired(required);
+			const { max_value, min_value } = input;
+			setChoices(option, input);
+			if (max_value != null) {
+				option.setMaxValue(max_value);
+			}
+			if (min_value != null) {
+				option.setMinValue(min_value);
+			}
+			return option;
+		});
+	}
+
+	get(interaction: ChatInputCommandInteraction) {
+		return this.required
+			? (interaction.options.getInteger(this.name, true) as Value<T, Required>)
+			: ((interaction.options.getInteger(this.name, false) ?? void 0) as Value<
+					T,
+					Required
+				>);
+	}
+}
+
+class StringOption<
+	T extends string = string,
+	Required extends boolean = boolean,
+> implements Option<T, Required>
+{
+	name: string;
+
+	required: Required;
+
+	autocomplete?(
+		interaction: AutocompleteInteraction<CacheType>,
+	): void | PromiseLike<void>;
+
+	constructor(
+		builder: SharedSlashCommandOptions,
+		input: SimpleStringOptionData<T, Required>,
+	) {
+		this.name = input.name;
+		this.required = input.required;
+		this.autocomplete = input.autocomplete;
+		builder.addStringOption((option) => {
+			option
+				.setName(input.name)
+				.setDescription(input.description)
+				.setRequired(input.required);
+			setChoices(option, input);
+			const { max_length, min_length } = input;
+			if (max_length != null) {
+				option.setMaxLength(max_length);
+			}
+			if (min_length != null) {
+				option.setMinLength(min_length);
+			}
+			return option;
+		});
+	}
+
+	get(interaction: ChatInputCommandInteraction) {
+		return this.required
+			? (interaction.options.getString(this.name, true) as Value<T, Required>)
+			: (interaction.options.getString(this.name) as Value<T, Required>);
+	}
+}
+
+class MentionableOption<Required extends boolean = boolean>
+	implements Option<Mentionable, Required>
+{
+	name: string;
+
+	required: Required;
+
+	constructor(
+		builder: SharedSlashCommandOptions,
+		input: SimpleMentionableOptionData<Required>,
+	) {
+		const name = input.name;
+		const description = input.description;
+		const required = input.required;
+		this.name = name;
+		this.required = required;
+		try {
+			builder.addMentionableOption((input) => {
+				return input
+					.setName(name)
+					.setDescription(description)
+					.setRequired(required);
+			});
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
+	get(
+		interaction: ChatInputCommandInteraction<CacheType>,
+	): Value<Mentionable, Required> {
+		return this.required
+			? (interaction.options.getMentionable(this.name, true) as Value<
+					Mentionable,
+					Required
+				>)
+			: (interaction.options.getMentionable(this.name) as Value<
+					Mentionable,
+					Required
+				>);
+	}
+}
+
+/**
+ * シンプルな SlashCommandBuilder(?)
+ */
+export class SimpleSlashCommandBuilder<
+	Options extends Option<unknown, boolean>[] = [],
+> {
+	public readonly name: string;
+
+	#description: string;
+
+	handle: SlashCommandSubcommandBuilder;
+
+	options: Options;
+
+	constructor(
+		name: string,
+		description: string,
+		handle: SlashCommandSubcommandBuilder,
+		options: Options,
+	) {
+		handle.setName(name);
+		handle.setDescription(description);
+		this.name = name;
+		this.#description = description;
+		this.handle = handle;
+		this.options = options;
+	}
+
+	/**
+	 * @param name コマンドの名前
+	 * @param description コマンドの説明文
+	 */
+	static create(
+		name: string,
+		description: string,
+	): SimpleSlashCommandBuilder<[]> {
+		return new SimpleSlashCommandBuilder(
+			name,
+			description,
+			new SlashCommandSubcommandBuilder(),
+			[],
+		);
+	}
+
+	protected newInstance<O extends Option<unknown, boolean>[]>(
+		name: string,
+		description: string,
+		handle: SlashCommandSubcommandBuilder,
+		options: O,
+	): SimpleSlashCommandBuilder<O> {
+		return new SimpleSlashCommandBuilder(name, description, handle, options);
+	}
+
+	addOption<T, Required extends boolean = false>(option: Option<T, Required>) {
+		/** @type {[...Options, Option<T, Required>]} */
+		const options: [...Options, Option<T, Required>] = [
+			...this.options,
+			option,
+		];
+		return this.newInstance(this.name, this.#description, this.handle, options);
+	}
+
+	addIntegerOption<T extends number, Required extends boolean = boolean>(
+		input: SimpleIntegerOptionData<T, Required>,
+	) {
+		return this.addOption(new IntegerOption(this.handle, input));
+	}
+
+	addStringOption<T extends string, Required extends boolean = boolean>(
+		input: SimpleStringOptionData<T, Required>,
+	) {
+		return this.addOption(new StringOption(this.handle, input));
+	}
+
+	addMentionableOption<Required extends boolean = boolean>(
+		input: SimpleMentionableOptionData<Required>,
+	) {
+		return this.addOption(new MentionableOption(this.handle, input));
+	}
+
+	build(
+		action: (
+			interaction: ChatInputCommandInteraction,
+			...options: OptionValueMap<Options>
+		) => Promise<void>,
+	) {
+		return new SimpleCommand(this, action);
+	}
+}
+
+export class SimpleCommand<Options extends Option<unknown, boolean>[]>
+	implements Command
+{
+	action: (
+		interaction: ChatInputCommandInteraction<CacheType>,
+		...options: OptionValueMap<Options>
+	) => Promise<void>;
+
+	builder: SimpleSlashCommandBuilder<Options>;
+
+	data: any;
+
+	constructor(
+		builder: SimpleSlashCommandBuilder<Options>,
+		action: (
+			interaction: ChatInputCommandInteraction,
+			...options: OptionValueMap<Options>
+		) => Promise<void>,
+	) {
+		this.builder = builder;
+		this.data = builder.handle;
+		this.action = action;
+	}
+
+	/**
+	 * @param {ChatInputCommandInteraction} interaction コマンドのインタラクション
+	 */
+	async execute(interaction: ChatInputCommandInteraction) {
+		const optionValues = this.builder.options.map((option) =>
+			option.get(interaction),
+		) as OptionValueMap<Options>;
+		await this.action(interaction, ...optionValues);
+	}
+
+	async autocomplete(
+		interaction: AutocompleteInteraction<CacheType>,
+	): Promise<void> {
+		const focusedValue = interaction.options.getFocused(true);
+		const focusedOption = this.builder.options.find(
+			(option) => option.name == focusedValue.name,
+		);
+		if (focusedOption == null) {
+			throw new TypeError(`Unknown option: '${focusedValue.name}'`);
+		}
+		focusedOption.autocomplete?.(interaction);
+	}
+}

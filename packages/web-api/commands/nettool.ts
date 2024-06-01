@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import dns from 'dns';
 import axios from 'axios';
 import ipRangeCheck from 'ip-range-check';
-import { LANG, strFormat } from '../../../util/languages';
+import { LANG, strFormat } from 'core';
 import { getIpInfo } from '../ip-api';
 import assert from 'assert';
 let cfIps: string[] = [];
@@ -276,7 +276,7 @@ module.exports = {
 										.join('\n') +
 									'\n```';
 							}
-						} catch (e) {
+						} catch (e: any) {
 							if (e.code == 'ENOTFOUND') {
 								throw new Error(
 									LANG.commands.nettool.subcommands.nsLookup.domainDoesNotExist,
@@ -307,7 +307,7 @@ module.exports = {
 						},
 					],
 				});
-			} catch (e) {
+			} catch (e: any) {
 				await interaction.editReply({
 					embeds: [
 						{

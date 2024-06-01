@@ -12,13 +12,11 @@
 		"colors": "^1.4.0",
 		"discord-player": "^6.6.8",
 		"discord.js": "^14.14.1",
-		"express": "^4.18.3",
 		"form-data": "^4.0.0",
 		"fs": "^0.0.2",
 		"ip-range-check": "^0.2.0",
 		"libsodium-wrappers": "^0.7.13",
 		"mediaplex": "^0.0.9",
-		"mongoose": "^8.2.1",
 		"path": "^0.12.7",
 		"rcon-client": "^4.2.4",
 		"ytdl-core": "^4.11.5",
@@ -45,9 +43,11 @@
 		"start": "npx tsx .",
 		"test": "jest",
 		"prepare": "husky",
-		"check": "npx tsc --noemit"
+		"check": "npx tsc --noemit",
+		"dev": "npx tsx watch --ignore accesslog.txt --ignore discordbot.log ."
 	},
 	"workspaces": [
-		"packages/*"
+		"packages/*",
+		"core"
 	]
 }

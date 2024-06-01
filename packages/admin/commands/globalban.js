@@ -1,5 +1,3 @@
-import { report } from 'process';
-
 const {
 	SlashCommandBuilder,
 	PermissionsBitField,
@@ -8,11 +6,8 @@ const {
 	TextInputStyle,
 	ActionRowBuilder,
 } = require('discord.js');
-const mongodb = require('../../../internal/mongodb'); //*MongoDB
-const { AdminUserIDs } = require('../../../config.json');
-const Pager = require('../../../util/pager');
-const { LANG, strFormat } = require('../../../util/languages');
-const config = require('../../../config.json');
+const { feature: db } = require('db'); //*MongoDB
+const { Pager, LANG, strFormat, Config } = require('core');
 const cooldowns = new Map();
 
 module.exports = {
@@ -77,9 +72,10 @@ module.exports = {
 		const executorID = interaction.user.id; // executed by
 		const subcommand = interaction.options.getSubcommand();
 		if (!subcommand) {
-			return await interaction.reply(
+			await interaction.reply(
 				LANG.commands.globalban.subcommandUnspecifiedError,
 			);
+			return;
 		}
 
 		if (subcommand !== LANG.commands.globalban.subcommands.report.name) {
@@ -89,14 +85,15 @@ module.exports = {
 		if (subcommand === LANG.commands.globalban.subcommands.sync.name) {
 			const member = interaction.guild.members.cache.get(interaction.user.id);
 			if (!member.permissions.has([PermissionsBitField.Flags.Administrator])) {
-				return await interaction.editReply({
+				await interaction.editReply({
 					content: LANG.commands.globalban.subcommands.sync.permissionError,
 					ephemeral: true,
 				});
+				return;
 			}
 			try {
 				// データベースから全てのユーザーを取得
-				const userCollection = mongodb.connection.collection('globalBans');
+				const userCollection = db.connection.collection('globalBans');
 				const allUsers = await userCollection.find({}).toArray();
 
 				// ユーザー情報をログに表示
@@ -128,7 +125,7 @@ module.exports = {
 					}
 				});
 
-				return await interaction.editReply({
+				await interaction.editReply({
 					embeds: [
 						{
 							title:
@@ -145,6 +142,7 @@ module.exports = {
 						},
 					],
 				});
+				return;
 			} catch (error) {
 				console.error(error);
 				await interaction.editReply(
@@ -159,10 +157,9 @@ module.exports = {
 			subcommand === LANG.commands.globalban.subcommands.add.name ||
 			subcommand === LANG.commands.globalban.subcommands.remove.name
 		) {
-			if (!AdminUserIDs.includes(executorID)) {
-				return await interaction.editReply(
-					LANG.commands.globalban.permissionError,
-				);
+			if (!Config.AdminUserIDs.includes(executorID)) {
+				await interaction.editReply(LANG.commands.globalban.permissionError);
+				return;
 			}
 			user = interaction.options.getUser(
 				LANG.commands.globalban.addRemoveOptionNames.user,
@@ -175,17 +172,18 @@ module.exports = {
 		//*add/rm
 		if (subcommand === LANG.commands.globalban.subcommands.add.name) {
 			try {
-				const existingBan = await mongodb.connection
+				const existingBan = await db.connection
 					.collection('globalBans')
 					.findOne({ userId: user.id });
 				if (existingBan) {
-					return await interaction.editReply(
+					await interaction.editReply(
 						strFormat(LANG.commands.globalban.subcommands.add.alreadyExists, [
 							user.tag,
 						]),
 					);
+					return;
 				}
-				await mongodb.connection.collection('globalBans').insertOne({
+				await db.connection.collection('globalBans').insertOne({
 					userId: user.id,
 					userName: user.tag,
 					reason: reason,
@@ -239,23 +237,24 @@ module.exports = {
 			}
 		} else if (subcommand === LANG.commands.globalban.subcommands.remove.name) {
 			try {
-				const existingBan = await mongodb.connection
+				const existingBan = await db.connection
 					.collection('globalBans')
 					.findOne({ userId: user.id });
 				if (!existingBan) {
-					return await interaction.editReply(
+					await interaction.editReply(
 						strFormat(LANG.commands.globalban.subcommands.remove.doNotExist, [
 							user.tag,
 						]),
 					);
+					return;
 				}
 
-				await mongodb.connection
+				await db.connection
 					.collection('globalBans')
 					.deleteOne({ userId: user.id });
 				let done = 0;
 				let fail = 0;
-				await interaction.client.guilds.cache.forEach((g) => {
+				interaction.client.guilds.cache.forEach((g) => {
 					// Botが参加しているすべてのサーバーで実行
 					try {
 						g.members.unban(user.id); // メンバーをBAN
@@ -291,19 +290,17 @@ module.exports = {
 				console.log(
 					strFormat(LANG.commands.globalban.operationResult, { done, fail }),
 				);
-				return;
 			} catch (error) {
 				console.error(error);
 				await interaction.editReply(
 					LANG.commands.globalban.generalError + '\n```' + error + '\n```',
 				);
-				return;
 			}
 
 			//*LIST
 		} else if (subcommand === LANG.commands.globalban.subcommands.list.name) {
 			try {
-				const userCollection = mongodb.connection.collection('globalBans');
+				const userCollection = db.connection.collection('globalBans');
 				const bans = await userCollection.find({}).toArray();
 				const pager = new Pager(
 					bans.map((ban) =>
@@ -350,11 +347,11 @@ module.exports = {
 						},
 					},
 				);
-				pager.replyTo(interaction);
+				await pager.replyTo(interaction);
 			} catch (error) {
 				console.error(error);
 
-				return await interaction.editReply({
+				await interaction.editReply({
 					embeds: [
 						{
 							title: LANG.commands.globalban.subcommands.list.errorTitle,
@@ -378,9 +375,10 @@ module.exports = {
 
 				const remainingTime = Math.ceil((expirationTime - currTime) / 1000);
 				if (remainingTime > 0) {
-					return interaction.reply(
+					await interaction.reply(
 						strFormat(LANG.commands.dm.cooldown, [remainingTime]),
 					);
+					return;
 				}
 			}
 			const modal = new ModalBuilder()
@@ -437,11 +435,10 @@ module.exports = {
 					],
 					ephemeral: true,
 				});
-				if (!config.notificationChannel) {
+				if (!Config.notificationChannel) {
 					throw new Error(LANG.commands.globalban.subcommands.report.error);
-					return;
 				}
-				const channel = client.channels.cache.get(config.notificationChannel);
+				const channel = client.channels.cache.get(Config.notificationChannel);
 				const d = new Date();
 				const u = d.getTime();
 				const fxunix = Math.floor(u / 1000);
@@ -478,9 +475,8 @@ module.exports = {
 			}
 			const expirationTime = Date.now() + cooldownTime * 1000;
 			cooldowns.set(interaction.user.id, expirationTime);
-			return;
 		} else {
-			return await interaction.editReply(
+			await interaction.editReply(
 				LANG.commands.globalban.unsupportedSubcommandError,
 			);
 		}

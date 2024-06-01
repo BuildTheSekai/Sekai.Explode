@@ -1,6 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { LANG, strFormat } from '../../../util/languages';
-import { SimpleSlashCommandBuilder } from '../../../common/SimpleCommand';
+import { LANG, strFormat, SimpleSlashCommandBuilder } from 'core';
 
 module.exports = SimpleSlashCommandBuilder.create(
 	LANG.commands.poll.name,

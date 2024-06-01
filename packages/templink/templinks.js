@@ -3,13 +3,9 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios').default;
-const { LANG, strFormat } = require('../../util/languages');
-const {
-	tempLinkSrvToken,
-	tempLinkSrvPostURL,
-	linkPort,
-	linkDomain,
-} = require('../../config.json');
+const { LANG, strFormat, Config } = require('core');
+
+const { tempLinkSrvToken, tempLinkSrvPostURL, linkPort, linkDomain } = Config;
 
 // 内部 TempLink サーバー
 
@@ -118,7 +114,7 @@ function unicodeEscape(str) {
  */
 function linkHandler(req, res) {
 	const remoteIp = req.headers['cf-connecting-ip'];
-	const logPath = path.join(__dirname, 'accesslog.txt');
+	const logPath = path.join(__dirname, '../', '../', 'accesslog.txt');
 	if (!fs.existsSync(logPath))
 		fs.writeFileSync(logPath, 'Access Log================\n');
 	fs.appendFileSync(logPath, `IP: ${remoteIp} | ${req.originalUrl}\n`);

@@ -110,11 +110,46 @@
 			"result": "Result:",
 			"notPlayableError": "Join the VC to execute the command!",
 			"playerTrack": "${title} (${duration})",
-			"noTracksPlayed": "There are no tracks played!"
+			"noTracksPlayed": "There are no tracks played!",
+			"useCommandInGuild": "Use this command in a server!",
+			"noPermission": "You have not permission to do it!"
 		},
 		"defaultValues": {
 			"graphLabel": "value"
-		}
+		},
+		"dayNames": [
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday"
+		],
+		"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+		"monthNames": [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December"
+		],
+		"dateFormat": "${day}, ${month} ${date}, ${year}${holiday}",
+		"holiday": {
+			"yes": " (${0})",
+			"no": ""
+		},
+		"timeFormat": "${hour}:${minute}:${second}",
+		"dateTimeFormat": "${time} at ${date}",
+		"yearsDaysAgo": "${years} year(s) and ${days} day(s) ago",
+		"yearsDaysLater": "${years} year(s) and ${days} day(s) later"
 	},
 	"commands": {
 		"cal": {
@@ -134,30 +169,6 @@
 					"description": "The days to start weeks"
 				}
 			},
-			"dayNames": [
-				"Sunday",
-				"Monday",
-				"Tuesday",
-				"Wednesday",
-				"Thursday",
-				"Friday",
-				"Saturday"
-			],
-			"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-			"monthNames": [
-				"January",
-				"February",
-				"March",
-				"April",
-				"May",
-				"June",
-				"July",
-				"August",
-				"September",
-				"October",
-				"November",
-				"December"
-			],
 			"monthYear": "${month} ${year}"
 		},
 		"check": {
@@ -191,6 +202,27 @@
 				}
 			},
 			"invalidUrlError": "The URL is invalid"
+		},
+		"date": {
+			"name": "date",
+			"description": "Gets dates",
+			"subcommands": {
+				"now": {
+					"name": "now",
+					"description": "Shows the current time"
+				},
+				"diff": {
+					"name": "diff",
+					"description": "Calculates the difference of today and another date",
+					"options": {
+						"date": {
+							"name": "date",
+							"description": "A date in yyyy/MM/dd"
+						}
+					},
+					"invalidDate": "Invalid date format"
+				}
+			}
 		},
 		"discordinfo": {
 			"name": "info",
@@ -509,6 +541,43 @@
 			"playerPaused": "Paused the player!",
 			"pauseFailed": "Failed to pause the player"
 		},
+		"perm": {
+			"name": "perm",
+			"description": "Permission configuration",
+			"subcommands": {
+				"set": {
+					"name": "set",
+					"description": "Updates a value"
+				},
+				"get": {
+					"name": "get",
+					"description": "Gets a value"
+				},
+				"remove": {
+					"name": "remove",
+					"description": "Removes a value"
+				}
+			},
+			"options": {
+				"permission": {
+					"name": "permission",
+					"description": "Permission name"
+				},
+				"group": {
+					"name": "group",
+					"description": "Target role or user"
+				}
+			},
+			"noSuchPermission": [
+				"Permission name: ${0}",
+				"There is not such permission!"
+			],
+			"permissionInformation": "Permission info",
+			"permissionName": "Permission name",
+			"permissionGroup": "Roles/Members",
+			"permissionSet": "Added a permission!",
+			"permissionRemoved": "Removed a permission"
+		},
 		"pieChart": {
 			"name": "piechart",
 			"description": "Generates a pie chart.",
@@ -640,6 +709,7 @@
 					"emptyMessage": "メッセージが設定されていません"
 				}
 			},
+			"replyCustomizePermission": "customizations of automatic replies",
 			"notInGuildError": "This commands must be used in a server!",
 			"permissionError": "You have not permission to use this command!"
 		},

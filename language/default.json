@@ -110,11 +110,46 @@
 			"result": "結果:",
 			"notPlayableError": "えー実行したくないなぁー...だってVCに君が居ないんだもん...",
 			"playerTrack": "${title} (${duration})",
-			"noTracksPlayed": "再生されている曲がありません！"
+			"noTracksPlayed": "再生されている曲がありません！",
+			"useCommandInGuild": "このコマンドはサーバー内で使用してください！",
+			"noPermission": "権限がありません！"
 		},
 		"defaultValues": {
 			"graphLabel": "value"
-		}
+		},
+		"dayNames": [
+			"日曜日",
+			"月曜日",
+			"火曜日",
+			"水曜日",
+			"木曜日",
+			"金曜日",
+			"土曜日"
+		],
+		"dayLabels": ["日", "月", "火", "水", "木", "金", "土"],
+		"monthNames": [
+			"1月",
+			"2月",
+			"3月",
+			"4月",
+			"5月",
+			"6月",
+			"7月",
+			"8月",
+			"9月",
+			"10月",
+			"11月",
+			"12月"
+		],
+		"dateFormat": "${year}年${month}${date}日${day}${holiday}",
+		"holiday": {
+			"yes": " (${0})",
+			"no": ""
+		},
+		"timeFormat": "${hour}:${minute}:${second}",
+		"dateTimeFormat": "${date} ${time}",
+		"yearsDaysAgo": "${years}年と${days}日前",
+		"yearsDaysLater": "${years}年と${days}日後"
 	},
 	"commands": {
 		"cal": {
@@ -134,30 +169,6 @@
 					"description": "週の始まりの曜日"
 				}
 			},
-			"dayNames": [
-				"日曜日",
-				"月曜日",
-				"火曜日",
-				"水曜日",
-				"木曜日",
-				"金曜日",
-				"土曜日"
-			],
-			"dayLabels": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-			"monthNames": [
-				"1月",
-				"2月",
-				"3月",
-				"4月",
-				"5月",
-				"6月",
-				"7月",
-				"8月",
-				"9月",
-				"10月",
-				"11月",
-				"12月"
-			],
 			"monthYear": "${year}年${month}"
 		},
 		"check": {
@@ -191,6 +202,27 @@
 				}
 			},
 			"invalidUrlError": "URLが間違っています"
+		},
+		"date": {
+			"name": "date",
+			"description": "日付の計算と表示",
+			"subcommands": {
+				"now": {
+					"name": "now",
+					"description": "現在時刻を表示"
+				},
+				"diff": {
+					"name": "diff",
+					"description": "今日との日付の差を計算",
+					"options": {
+						"date": {
+							"name": "date",
+							"description": "yyyy/MM/dd形式の日付"
+						}
+					},
+					"invalidDate": "日付の形式が無効です"
+				}
+			}
 		},
 		"discordinfo": {
 			"name": "info",
@@ -402,6 +434,15 @@
 			},
 			"defaultTitle": "${0}'s graph"
 		},
+		"loop": {
+			"name": "loop",
+			"description": "音楽をループ再生します。",
+			"mode": {
+				"track": "現在の曲をループ再生します!",
+				"queue": "キュー内の曲をループ再生します!",
+				"off": "ループ再生をオフにしました!"
+			}
+		},
 		"mcSrvlookup": {
 			"name": "mcsrv_record",
 			"description": "Lookup SRV Record",
@@ -540,6 +581,40 @@
 			"playerPaused": "音楽を一時停止しました！",
 			"pauseFailed": "一時停止できませんでした"
 		},
+		"perm": {
+			"name": "perm",
+			"description": "権限の設定",
+			"subcommands": {
+				"set": {
+					"name": "set",
+					"description": "値の更新"
+				},
+				"get": {
+					"name": "get",
+					"description": "値の取得"
+				},
+				"remove": {
+					"name": "remove",
+					"description": "値の削除"
+				}
+			},
+			"options": {
+				"permission": {
+					"name": "permission",
+					"description": "権限名"
+				},
+				"group": {
+					"name": "group",
+					"description": "対象のロールまたはユーザー"
+				}
+			},
+			"noSuchPermission": ["権限名: ${0}", "その名前の権限はありません!"],
+			"permissionInformation": "権限情報",
+			"permissionName": "権限名",
+			"permissionGroup": "ロール/メンバー",
+			"permissionSet": "権限を追加しました!",
+			"permissionRemoved": "権限を削除しました"
+		},
 		"pieChart": {
 			"name": "piechart",
 			"description": "円グラフを生成します。",
@@ -671,6 +746,7 @@
 					"emptyMessage": "メッセージが設定されていません"
 				}
 			},
+			"replyCustomizePermission": "自動応答の設定",
 			"notInGuildError": "このコマンドはサーバー内でのみ使用できます！",
 			"permissionError": "このコマンドを使用する権限がありません！"
 		},
