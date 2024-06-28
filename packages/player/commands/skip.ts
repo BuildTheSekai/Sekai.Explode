@@ -2,6 +2,9 @@ import assert from 'assert';
 import { SlashCommandBuilder } from 'discord.js';
 import { LANG, strFormat } from 'core';
 import { PlayerCommand } from '../PlayerCommand';
+import { feature as perms } from 'perms';
+
+perms.registerPermission('dj', '/skip コマンドの使用');
 
 module.exports = new PlayerCommand(
 	new SlashCommandBuilder()
@@ -13,6 +16,14 @@ module.exports = new PlayerCommand(
 		if (!queuedTracks[0]) {
 			await interaction.reply({
 				content: LANG.common.message.noTracksPlayed,
+				ephemeral: true,
+			});
+			return;
+		}
+
+		if (!perms.hasPermission(interaction.member, 'dj')) {
+			await interaction.reply({
+				content: LANG.common.message.noPermission,
 				ephemeral: true,
 			});
 			return;

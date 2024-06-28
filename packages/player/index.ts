@@ -9,6 +9,7 @@ import {
 } from './players';
 import { Client } from 'discord.js';
 import * as db from 'db';
+import { feature as perms } from 'perms';
 
 class PlayerFeature extends Feature {
 	#player: Player | null = null;
@@ -17,7 +18,7 @@ class PlayerFeature extends Feature {
 
 	enabled = Config.features?.player ?? true;
 
-	dependencies = [db.feature];
+	dependencies = [db.feature, perms];
 
 	private deletePromise?: Promise<void>;
 

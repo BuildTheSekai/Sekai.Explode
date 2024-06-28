@@ -20,7 +20,7 @@ export class PlayerCommand implements Command {
 	constructor(
 		data: SlashCommandBuilder,
 		action: (
-			interaction: ChatInputCommandInteraction,
+			interaction: ChatInputCommandInteraction<'cached'>,
 			queue: GuildQueue<QueueMetadata>,
 			voiceChannelId: string,
 		) => Promise<void>,
@@ -33,6 +33,14 @@ export class PlayerCommand implements Command {
 	 * @param interaction
 	 */
 	async execute(interaction: ChatInputCommandInteraction) {
+		if (!interaction.inCachedGuild()) {
+			await interaction.reply({
+				content: LANG.common.message.useCommandInGuild,
+				ephemeral: true,
+			});
+			return;
+		}
+
 		const voiceChannelId = getPlayableVoiceChannelId(interaction);
 		if (voiceChannelId == null) {
 			await interaction.reply({
