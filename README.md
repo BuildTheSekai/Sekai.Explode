@@ -1,3 +1,8 @@
+# ⚠️ Archived - このプロジェクトの開発は終了しました。
+Sekai.Explodeは開発を終了します。Contributorの皆さんや、このBotを利用してくださった方々に感謝致します！
+
+今までありがとうございました！
+
 # Sekai.explode - Simple Discord Bot w/discord.js@v14
 
 ![Alt](https://repobeats.axiom.co/api/embed/b7fc33791d3233660e7c02524ace22c31b66e890.svg "Repobeats analytics image")
